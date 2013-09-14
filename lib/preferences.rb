@@ -309,7 +309,8 @@ module Preferences
       unless preferences_group_loaded?(group)
         group_id, group_type = Preference.split_group(group)
         find_preferences(:group_id => group_id, :group_type => group_type).each do |preference|
-          preferences[preference.name] = preference.value unless preferences.include?(preference.name)
+          # fixed: ignore entries in database that are not present in the definition
+          preferences[preference.name] = preference.value unless (preferences.include?(preference.name) || !preference_definitions[preference.name])
         end
 
         # Add defaults
