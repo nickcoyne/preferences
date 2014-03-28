@@ -609,7 +609,7 @@ module Preferences
             attributes.all? {|attribute, value| preference[attribute] == value}
           end
         else
-          stored_preferences.find(:all, :conditions => attributes)
+          stored_preferences.where(attributes)
         end
       end
   end
