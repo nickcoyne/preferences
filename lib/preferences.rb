@@ -612,6 +612,20 @@ module Preferences
           stored_preferences.where(attributes)
         end
       end
+      
+      # Was removed from Rails 4, so inlne it here
+      def convert_number_column_value(value)
+        case value
+        when FalseClass
+          0
+        when TrueClass
+          1
+        when String
+          value.presence
+        else
+          value
+        end
+      end
   end
 end
 
