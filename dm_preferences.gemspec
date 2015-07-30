@@ -2,13 +2,14 @@ $LOAD_PATH.unshift File.expand_path('../lib', __FILE__)
 require 'preferences/version'
 
 Gem::Specification.new do |s|
-  s.name              = "preferences"
+  s.name              = "dm_preferences"
   s.version           = Preferences::VERSION
-  s.authors           = ["Aaron Pfeifer"]
-  s.email             = "aaron@pluginaweek.org"
-  s.homepage          = "http://www.pluginaweek.org"
+  s.authors           = ['Brett Walker', 'Aaron Pfeifer']
+  s.email             = 'github@digitalmoksha.com'
   s.description       = "Adds support for easily creating custom preferences for ActiveRecord models"
   s.summary           = "Custom preferences for ActiveRecord models"
+  s.homepage          = 'https://github.com/digitalmoksha/preferences'
+
   s.require_paths     = ["lib"]
   s.files             = `git ls-files`.split("\n")
   s.test_files        = `git ls-files -- test/*`.split("\n")
