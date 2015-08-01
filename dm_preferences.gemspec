@@ -17,5 +17,6 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files  = %w(README.md CHANGELOG.md LICENSE)
   
   s.add_development_dependency "rails", "~> 4.2"
+  s.add_development_dependency "sqlite3"
   s.add_development_dependency 'rspec-rails'
  end
