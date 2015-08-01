@@ -9,6 +9,7 @@ Gem::Specification.new do |s|
   s.description       = "Adds support for easily creating custom preferences for ActiveRecord models"
   s.summary           = "Custom preferences for ActiveRecord models"
   s.homepage          = 'https://github.com/digitalmoksha/preferences'
+  s.licenses          = ['MIT']
 
   s.require_paths     = ["lib"]
   s.files             = `git ls-files`.split("\n")
@@ -17,6 +18,6 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files  = %w(README.md CHANGELOG.md LICENSE)
   
   s.add_development_dependency "rails", "~> 4.2"
-  s.add_development_dependency "sqlite3"
-  s.add_development_dependency 'rspec-rails'
+  s.add_development_dependency "sqlite3", '~> 0'
+  s.add_development_dependency 'rspec-rails', '~> 3.0'
  end

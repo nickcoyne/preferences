@@ -10,11 +10,15 @@ module Preferences
       
       @type = args.first ? args.first.to_sym : :boolean
       
-      if @type == :any
+      case @type
+      when :any
         @klass = "ActiveRecord::Type::Value".constantize.new
+      when :datetime
+        @klass = "ActiveRecord::Type::DateTime".constantize.new
       else
         @klass = "ActiveRecord::Type::#{@type.to_s.classify}".constantize.new
       end
+
       # Create a column that will be responsible for typecasting
       @column = ActiveRecord::ConnectionAdapters::Column.new(name.to_s, options[:default], @klass)
 
