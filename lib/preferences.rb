@@ -259,12 +259,13 @@ module Preferences
 
         # Since each preference is a different record, they need their own
         # join so that the proper conditions can be set
-        joins << "LEFT JOIN preferences AS #{table} ON #{table}.owner_id = #{table_name}.#{primary_key} AND " + sanitize_sql(
-          "#{table}.owner_type" => base_class.name.to_s,
-          "#{table}.group_id" => group_id,
-          "#{table}.group_type" => group_type,
-          "#{table}.name" => preference
-        )
+        joins << "LEFT JOIN preferences AS #{table} ON #{table}.owner_id = #{table_name}.#{primary_key} AND " + 
+          sanitize_sql_hash_for_conditions(
+            "#{table}.owner_type" => base_class.name.to_s,
+            "#{table}.group_id" => group_id,
+            "#{table}.group_type" => group_type,
+            "#{table}.name" => preference
+          )
 
         if inverse
           statements << "#{table}.id IS NOT NULL AND #{table}.value " + (value.nil? ? ' IS NOT NULL' : ' != ?') + (!is_default ? " OR #{table}.id IS NULL" : '')
@@ -275,8 +276,22 @@ module Preferences
       end
 
       sql = statements.map! {|statement| "(#{statement})"} * ' AND '
-      self.joins(joins).where(values.unshift(sql))
+      joins(joins).where(values.unshift(sql))
     end
+
+    # this function is deprecated in 4.2 and to be removed in 5.0.
+    # but it's useful, particularly how it can handle conditions that are nil.
+    # so keep it for now.
+    def sanitize_sql_hash_for_conditions(attrs, default_table_name = self.table_name)
+      attrs = ActiveRecord::PredicateBuilder.resolve_column_aliases self, attrs
+      attrs = expand_hash_conditions_for_aggregates(attrs)
+
+      table = Arel::Table.new(table_name, arel_engine).alias(default_table_name)
+      ActiveRecord::PredicateBuilder.build_from_hash(self, attrs, table).map { |b|
+        connection.visitor.compile b
+      }.join(' AND ')
+    end
+
   end
 
   module InstanceMethods
