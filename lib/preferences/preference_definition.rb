@@ -10,9 +10,14 @@ module Preferences
       
       @type = args.first ? args.first.to_sym : :boolean
       
+      if @type == :any
+        @klass = "ActiveRecord::Type::Value".constantize.new
+      else
+        @klass = "ActiveRecord::Type::#{@type.to_s.classify}".constantize.new
+      end
       # Create a column that will be responsible for typecasting
-      @column = ActiveRecord::ConnectionAdapters::Column.new(name.to_s, options[:default], @type == :any ? nil : @type.to_s)
-      
+      @column = ActiveRecord::ConnectionAdapters::Column.new(name.to_s, options[:default], @klass)
+
       @group_defaults = (options[:group_defaults] || {}).inject({}) do |defaults, (group, default)|
         defaults[group.is_a?(Symbol) ? group.to_s : group] = type_cast(default)
         defaults
@@ -27,7 +32,7 @@ module Preferences
     # The default value to use for the preference in case none have been
     # previously defined
     def default_value(group = nil)
-      @group_defaults.include?(group) ? @group_defaults[group] : @column.default
+      @group_defaults.include?(group) ? @group_defaults[group] : type_cast(@column.default)
     end
     
     # Determines whether column backing this preference stores numberic values
@@ -39,7 +44,9 @@ module Preferences
     # This uses ActiveRecord's typecast functionality so the same rules for
     # typecasting a model's columns apply here.
     def type_cast(value)
-      @type == :any ? value : @column.type_cast(value)
+      return 1 if @type == :integer && value == true
+      return 0 if @type == :integer && value == false
+      @type == :any ? value : @column.type_cast_from_database(value)
     end
     
     # Typecasts the value to true/false depending on the type of preference
