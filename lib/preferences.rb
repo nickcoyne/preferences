@@ -46,6 +46,7 @@ require 'preferences/preference_definition'
 #   u.valid?                        # => true
 module Preferences
   module MacroMethods
+
     # Defines a new preference for all records in the model.  By default,
     # preferences are assumed to have a boolean data type, so all values will
     # be typecasted to true/false based on ActiveRecord rules.
@@ -156,7 +157,7 @@ module Preferences
         class_attribute :preference_definitions
         self.preference_definitions = {}
 
-        has_many :stored_preferences, :as => :owner, :class_name => 'Preference', :dependent => :destroy
+        has_many :stored_preferences, :as => :owner, :class_name => 'Preference', :dependent => :delete_all
 
         after_save :update_preferences
 
@@ -513,6 +514,7 @@ module Preferences
     end
 
     private
+
       # Asserts that the given name is a valid preference in this model.  If it
       # is not, then an ArgumentError exception is raised.
       def assert_valid_preference(name)
@@ -621,13 +623,19 @@ module Preferences
       def find_preferences(attributes)
         if stored_preferences.loaded?
           stored_preferences.select do |preference|
-            attributes.all? {|attribute, value| preference[attribute] == value}
+            attributes.all? do |attribute, value|
+              if value.is_a?(Array)
+                value.include?(preference[attribute])
+              else
+                preference[attribute] == value
+              end
+            end
           end
         else
           stored_preferences.where(attributes)
         end
       end
-      
+
       # Was removed from Rails 4, so inlne it here
       def convert_number_column_value(value)
         case value
