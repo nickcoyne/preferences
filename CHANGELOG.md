@@ -1,19 +1,30 @@
-== master
+## 1.0 / 2015-08-01
 
-== 0.5.0 / 2011-08-23
+* Rails 4.2 support
+* Uses rspec for testing - all tests now pass
+* Removed deprecation: "sanitize_sql_hash_for_conditions is deprecated, and will be removed in Rails 5.0"
+* Add ActiveRecord::Type support for Rails 4.2
+* use :delete_all on stored_preferences
+
+## 0.5.6 / 2015-07-31
+
+* changed name of gem to _dm_preferences_ so as not to conflict with original
+* works with Rails 4.1
+
+## 0.5.0 / 2011-08-23
 
 * Rails 3 support [Jack Dempsey]
 
-== 0.4.2 / 2010-04-17
+## 0.4.2 / 2010-04-17
 
 * Fix #preferences lookup not typecasting values
 
-== 0.4.1 / 2010-03-07
+## 0.4.1 / 2010-03-07
 
 * Add support for per-group default preferences
 * Fix unsaved boolean preferences getting overridden by defaults if value is false
 
-== 0.4.0 / 2010-03-07
+## 0.4.0 / 2010-03-07
 
 * Add {preference}_changed?, {preference}_was, {preference}_changed, {preference}_will_change!, and reset_{preference}!
 * Add #preferences_changed?, #preferences_changed, and #preference_changes
@@ -30,44 +41,44 @@
 * Add a generator for db migration to make installation a bit easier [Tim Lowrimore]
 * Add named scopes: #with_preferences and #without_preferences
 
-== 0.3.1 / 2009-04-25
+## 0.3.1 / 2009-04-25
 
 * Rename Preference#attribute to #name to avoid conflicts with reserved methods in ActiveRecord
 
-== 0.3.0 / 2009-04-13
+## 0.3.0 / 2009-04-13
 
 * Add dependency on Rails 2.3
 * Remove dependency on plugins_plus
 
-== 0.2.0 / 2008-12-14
+## 0.2.0 / 2008-12-14
 
 * Remove the PluginAWeek namespace
 
-== 0.1.5 / 2008-11-16
+## 0.1.5 / 2008-11-16
 
 * Add all prefers/preferred accessors for preferences to be analogous to ActiveRecord column accessors
 * Fix preferences defined in STI subclasses not working [Quinn Shanahan]
 
-== 0.1.4 / 2008-10-26
+## 0.1.4 / 2008-10-26
 
 * Change how the base module is included to prevent namespacing conflicts
 
-== 0.1.3 / 2008-06-29
+## 0.1.3 / 2008-06-29
 
 * Add +prefs+ as an alias for +preferences+
 * Fix +preferences+ not properly selecting preferences when a group is specified
 * Improve test coverage
 
-== 0.1.2 / 2008-06-22
+## 0.1.2 / 2008-06-22
 
 * Remove log files from gems
 
-== 0.1.1 / 2008-06-20
+## 0.1.1 / 2008-06-20
 
 * Rename preference_values hash to preferences
 * Rename preferences association to stored_preferences
 
-== 0.1.0 / 2008-06-19
+## 0.1.0 / 2008-06-19
 
 * Avoid string evaluation for dynamic methods
 * Return hashes for the preference_values, e.g.
@@ -81,6 +92,6 @@
 
 * Remove support for an options hash when specifying :for associations for preference
 
-== 0.0.1 / 2008-05-10
+## 0.0.1 / 2008-05-10
 
 * Initial public release

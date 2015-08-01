@@ -12,10 +12,10 @@ Gem::Specification.new do |s|
 
   s.require_paths     = ["lib"]
   s.files             = `git ls-files`.split("\n")
-  s.test_files        = `git ls-files -- test/*`.split("\n")
+  s.test_files        = Dir["spec/**/*"]
   s.rdoc_options      = %w(--line-numbers --inline-source --title preferences --main README.rdoc)
-  s.extra_rdoc_files  = %w(README.rdoc CHANGELOG.rdoc LICENSE)
+  s.extra_rdoc_files  = %w(README.md CHANGELOG.md LICENSE)
   
-  s.add_development_dependency("rake")
-  s.add_development_dependency("plugin_test_helper", ">= 0.3.2")
-end
+  s.add_development_dependency "rails", "~> 4.2"
+  s.add_development_dependency 'rspec-rails'
+ end
