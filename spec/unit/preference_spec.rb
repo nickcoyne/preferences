@@ -1,259 +1,251 @@
-require File.expand_path(File.dirname(__FILE__) + '/../test_helper')
+require 'spec_helper'
 
-class PreferenceByDefaultTest < ActiveSupport::TestCase
-  def setup
+include Factory
+
+#------------------------------------------------------------------------------
+describe "PreferenceByDefaultTest" do
+  before do
     @preference = Preference.new
   end
-  
-  def test_should_not_have_a_name
+
+  it "test_should_not_have_a_name" do
     assert @preference.name.blank?
   end
-  
-  def test_should_not_have_an_owner
+
+  it "test_should_not_have_an_owner" do
     assert_nil @preference.owner_id
   end
-  
-  def test_should_not_have_an_owner_type
+
+  it "test_should_not_have_an_owner_type" do
     assert @preference.owner_type.blank?
   end
-  
-  def test_should_not_have_a_group_association
+
+  it "test_should_not_have_a_group_association" do
     assert_nil @preference.group_id
   end
-  
-  def test_should_not_have_a_group_type
+
+  it "test_should_not_have_a_group_type" do
     assert @preference.group_type.nil?
   end
-  
-  def test_should_not_have_a_value
+
+  it "test_should_not_have_a_value" do
     assert @preference.value.blank?
   end
-  
-  def test_should_not_have_a_definition
+
+  it "test_should_not_have_a_definition" do
     assert_nil @preference.definition
   end
 end
 
-class PreferenceTest < ActiveSupport::TestCase
-  def test_should_be_valid_with_a_set_of_valid_attributes
+#------------------------------------------------------------------------------
+describe "PreferenceTest" do
+  
+  it "test_should_be_valid_with_a_set_of_valid_attributes" do
     preference = new_preference
     assert preference.valid?
   end
-  
-  def test_should_require_a_name
+
+  it "test_should_require_a_name" do
     preference = new_preference(:name => nil)
     assert !preference.valid?
-    assert preference.errors.invalid?(:name)
+    assert preference.errors.include?(:name)
   end
-  
-  def test_should_require_an_owner_id
+
+  it "test_should_require_an_owner_id" do
     preference = new_preference(:owner => nil)
     assert !preference.valid?
-    assert preference.errors.invalid?(:owner_id)
+    assert preference.errors.include?(:owner_id)
   end
-  
-  def test_should_require_an_owner_type
+
+  it "test_should_require_an_owner_type" do
     preference = new_preference(:owner => nil)
     assert !preference.valid?
-    assert preference.errors.invalid?(:owner_type)
+    assert preference.errors.include?(:owner_type)
   end
-  
-  def test_should_not_require_a_group_id
+
+  it "test_should_not_require_a_group_id" do
     preference = new_preference(:group => nil)
     assert preference.valid?
   end
-  
-  def test_should_not_require_a_group_id_if_type_specified
+
+  it "test_should_not_require_a_group_id_if_type_specified" do
     preference = new_preference(:group => nil)
     preference.group_type = 'Car'
     assert preference.valid?
   end
-  
-  def test_should_not_require_a_group_type
+
+  it "test_should_not_require_a_group_type" do
     preference = new_preference(:group => nil)
     assert preference.valid?
   end
-  
-  def test_should_require_a_group_type_if_id_specified
+
+  it "test_should_require_a_group_type_if_id_specified" do
     preference = new_preference(:group => nil)
     preference.group_id = 1
     assert !preference.valid?
-    assert preference.errors.invalid?(:group_type)
-  end
-  
-  def test_should_protect_attributes_from_mass_assignment
-    preference = Preference.new(
-      :id => 1,
-      :name => 'notifications',
-      :value => '123',
-      :owner_id => 1,
-      :owner_type => 'User',
-      :group_id => 1,
-      :group_type => 'Car'
-    )
-    
-    assert_nil preference.id
-    assert_equal 'notifications', preference.name
-    assert_equal '123', preference.value
-    assert_equal 1, preference.owner_id
-    assert_equal 'User', preference.owner_type
-    assert_equal 1, preference.group_id
-    assert_equal 'Car', preference.group_type
+    assert preference.errors.include?(:group_type)
   end
 end
 
-class PreferenceAsAClassTest < ActiveSupport::TestCase
-  def test_should_be_able_to_split_nil_groups
+#------------------------------------------------------------------------------
+describe "PreferenceAsAClassTest" do
+  it "test_should_be_able_to_split_nil_groups" do
     group_id, group_type = Preference.split_group(nil)
     assert_nil group_id
     assert_nil group_type
   end
-  
-  def test_should_be_able_to_split_non_active_record_groups
+
+  it "test_should_be_able_to_split_non_active_record_groups" do
     group_id, group_type = Preference.split_group('car')
     assert_nil group_id
     assert_equal 'car', group_type
-    
+
     group_id, group_type = Preference.split_group(:car)
     assert_nil group_id
     assert_equal 'car', group_type
-    
+
     group_id, group_type = Preference.split_group(10)
     assert_nil group_id
     assert_equal 10, group_type
   end
-  
-  def test_should_be_able_to_split_active_record_groups
+
+  it "test_should_be_able_to_split_active_record_groups" do
     car = create_car
-    
+
     group_id, group_type = Preference.split_group(car)
     assert_equal 1, group_id
     assert_equal 'Car', group_type
   end
 end
 
-class PreferenceAfterBeingCreatedTest < ActiveSupport::TestCase
-  def setup
+#------------------------------------------------------------------------------
+describe "PreferenceAfterBeingCreatedTest" do
+  before do
     User.preference :notifications, :boolean
-    
+
     @preference = create_preference(:name => 'notifications')
   end
-  
-  def test_should_have_an_owner
-    assert_not_nil @preference.owner
+
+  it "test_should_have_an_owner" do
+    expect(@preference.owner.nil?).to eq false
   end
-  
-  def test_should_have_a_definition
-    assert_not_nil @preference.definition
+
+  it "test_should_have_a_definition" do
+    expect(@preference.definition.nil?).to eq false
   end
-  
-  def test_should_have_a_value
-    assert_not_nil @preference.value
+
+  it "test_should_have_a_value" do
+    expect(@preference.value.nil?).to eq false
   end
-  
-  def test_should_not_have_a_group_association
+
+  it "test_should_not_have_a_group_association" do
     assert_nil @preference.group
   end
-  
-  def teardown
+
+  after do
     User.preference_definitions.delete('notifications')
   end
 end
 
-class PreferenceWithBasicGroupTest < ActiveSupport::TestCase
-  def setup
+#------------------------------------------------------------------------------
+describe "PreferenceWithBasicGroupTest" do
+  before do
     @preference = create_preference(:group_type => 'car')
   end
-  
-  def test_should_have_a_group_association
+
+  it "test_should_have_a_group_association" do
     assert_equal 'car', @preference.group
   end
 end
 
-class PreferenceWithActiveRecordGroupTest < ActiveSupport::TestCase
-  def setup
+#------------------------------------------------------------------------------
+describe "PreferenceWithActiveRecordGroupTest" do
+  before do
     @car = create_car
     @preference = create_preference(:group => @car)
   end
-  
-  def test_should_have_a_group_association
+
+  it "test_should_have_a_group_association" do
     assert_equal @car, @preference.group
   end
 end
 
-class PreferenceWithBooleanTypeTest < ActiveSupport::TestCase
-  def setup
+#------------------------------------------------------------------------------
+describe "PreferenceWithBooleanTypeTest" do
+  before do
     User.preference :notifications, :boolean
   end
-  
-  def test_should_type_cast_nil_values
+
+  it "test_should_type_cast_nil_values" do
     preference = new_preference(:name => 'notifications', :value => nil)
     assert_nil preference.value
   end
-  
-  def test_should_type_cast_numeric_values
+
+  it "test_should_type_cast_numeric_values" do
     preference = new_preference(:name => 'notifications', :value => 0)
     assert_equal false, preference.value
-    
+
     preference.value = 1
     assert_equal true, preference.value
   end
-  
-  def test_should_type_cast_boolean_values
+
+  it "test_should_type_cast_boolean_values" do
     preference = new_preference(:name => 'notifications', :value => false)
     assert_equal false, preference.value
-    
+
     preference.value = true
     assert_equal true, preference.value
   end
-  
-  def teardown
+
+  after do
     User.preference_definitions.delete('notifications')
   end
 end
 
-class PreferenceWithFloatTypeTest < ActiveSupport::TestCase
-  def setup
+#------------------------------------------------------------------------------
+describe "PreferenceWithFloatTypeTest" do
+  before do
     User.preference :rate, :float, :default => 10.0
   end
-  
-  def test_should_type_cast_nil_values
+
+  it "test_should_type_cast_nil_values" do
     preference = new_preference(:name => 'rate', :value => nil)
     assert_nil preference.value
   end
-  
-  def test_should_type_cast_numeric_values
+
+  it "test_should_type_cast_numeric_values" do
     preference = new_preference(:name => 'rate', :value => 1.0)
     assert_equal 1.0, preference.value
-    
+
     preference.value = "1.1"
     assert_equal 1.1, preference.value
   end
 
-  def teardown
+  after do
     User.preference_definitions.delete('rate')
   end
 end
- 
-class PreferenceWithSTIOwnerTest < ActiveSupport::TestCase
-  def setup
+
+#------------------------------------------------------------------------------
+describe "PreferenceWithSTIOwnerTest" do
+  before do
     @manager = create_manager
     @preference = create_preference(:owner => @manager, :name => 'health_insurance', :value => true)
   end
-  
-  def test_should_have_an_owner
+
+  it "test_should_have_an_owner" do
     assert_equal @manager, @preference.owner
   end
-  
-  def test_should_have_an_owner_type
+
+  it "test_should_have_an_owner_type" do
     assert_equal 'Employee', @preference.owner_type
   end
-  
-  def test_should_have_a_definition
-    assert_not_nil @preference.definition
+
+  it "test_should_have_a_definition" do
+    expect(@preference.definition.nil?).to eq false
   end
-  
-  def test_should_have_a_value
+
+  it "test_should_have_a_value" do
     assert_equal true, @preference.value
   end
 end

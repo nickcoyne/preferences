@@ -21,7 +21,7 @@ module Factory
   def new_record(model, *args)
     attributes = valid_attributes_for(model, *args)
     record = model.new(attributes)
-    attributes.each {|attr, value| record.send("#{attr}=", value) if model.accessible_attributes && !model.accessible_attributes.include?(attr) || model.protected_attributes && model.protected_attributes.include?(attr)}
+    attributes.each {|attr, value| record.send("#{attr}=", value)}
     record
   end
   
