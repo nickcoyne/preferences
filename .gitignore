@@ -7,3 +7,4 @@ test/app_root/script
 Gemfile.lock
 spec/dummy/db/test.sqlite3
 spec/dummy/log
+.DS_Store
