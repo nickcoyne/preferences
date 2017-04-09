@@ -7,7 +7,6 @@ describe 'PreferenceDefinitionByDefaultTest' do
   end
 
   it 'test_should_have_a_name' do
-    # assert_equal 'notifications2', @definition.name
     expect('notifications').to eq @definition.name
   end
 
@@ -16,15 +15,15 @@ describe 'PreferenceDefinitionByDefaultTest' do
   end
 
   it "test_should_have_a_type" do
-    assert_equal :boolean, @definition.type
+    expect(@definition.type).to eq :boolean
   end
 
   it "test_should_type_cast_values_as_booleans" do
-    assert_equal nil, @definition.type_cast(nil)
-    assert_equal true, @definition.type_cast(true)
-    assert_equal false, @definition.type_cast(false)
-    assert_equal false, @definition.type_cast(0)
-    assert_equal true, @definition.type_cast(1)
+    expect(@definition.type_cast(nil)).to eq nil
+    expect(@definition.type_cast(true)).to eq true
+    expect(@definition.type_cast(false)).to eq false
+    expect(@definition.type_cast(0)).to eq false
+    expect(@definition.type_cast(1)).to eq true
   end
 end
 
@@ -44,7 +43,7 @@ describe "PreferenceDefinitionWithDefaultValueTest" do
   end
 
   it "test_should_type_cast_default_values" do
-    assert_equal true, @definition.default_value
+    expect(@definition.default_value).to eq true
   end
 end
 
@@ -55,15 +54,15 @@ describe "PreferenceDefinitionWithGroupDefaultsTest" do
   end
 
   it "test_should_use_default_for_default_group" do
-    assert_equal true, @definition.default_value
+    expect(@definition.default_value).to eq true
   end
 
   it "test_should_use_default_for_unknown_group" do
-    assert_equal true, @definition.default_value('email')
+    expect(@definition.default_value('email')).to eq true
   end
 
   it "test_should_use_group_default_for_known_group" do
-    assert_equal false, @definition.default_value('chat')
+    expect(@definition.default_value('chat')).to eq false
   end
 end
 
@@ -74,7 +73,7 @@ describe "PreferenceDefinitionWithStringifiedTypeTest" do
   end
 
   it "test_should_symbolize_type" do
-    assert_equal :any, @definition.type
+    expect(@definition.type).to eq :any
   end
 end
 
@@ -85,41 +84,41 @@ describe "PreferenceDefinitionWithAnyTypeTest" do
   end
 
   it "test_use_custom_type" do
-    assert_equal :any, @definition.type
+    expect(@definition.type).to eq :any
   end
 
   it "test_should_not_be_number" do
-    assert !@definition.number?
+    expect(!@definition.number?).to eq true
   end
 
   it "test_should_not_type_cast" do
-    assert_equal nil, @definition.type_cast(nil)
-    assert_equal 0, @definition.type_cast(0)
-    assert_equal 1, @definition.type_cast(1)
-    assert_equal false, @definition.type_cast(false)
-    assert_equal true, @definition.type_cast(true)
-    assert_equal '', @definition.type_cast('')
+    expect(@definition.type_cast(nil)).to eq nil
+    expect(@definition.type_cast(0)).to eq 0
+    expect(@definition.type_cast(1)).to eq 1
+    expect(@definition.type_cast(false)).to eq false
+    expect(@definition.type_cast(true)).to eq true
+    expect(@definition.type_cast('')).to eq ''
   end
 
   it "test_should_query_false_if_value_is_nil" do
-    assert_equal false, @definition.query(nil)
+    expect(@definition.query(nil)).to eq false
   end
 
   it "test_should_query_true_if_value_is_zero" do
-    assert_equal true, @definition.query(0)
+    expect(@definition.query(0)).to eq true
   end
 
   it "test_should_query_true_if_value_is_not_zero" do
-    assert_equal true, @definition.query(1)
-    assert_equal true, @definition.query(-1)
+    expect(@definition.query(1)).to eq true
+    expect(@definition.query(-1)).to eq true
   end
 
   it "test_should_query_false_if_value_is_blank" do
-    assert_equal false, @definition.query('')
+    expect(@definition.query('')).to eq false
   end
 
   it "test_should_query_true_if_value_is_not_blank" do
-    assert_equal true, @definition.query('hello')
+    expect(@definition.query('hello')).to eq true
   end
 end
 
@@ -130,31 +129,31 @@ describe "PreferenceDefinitionWithBooleanTypeTest" do
   end
 
   it "test_should_not_be_number" do
-    assert !@definition.number?
+    expect(!@definition.number?).to eq true
   end
 
   it "test_should_not_type_cast_if_value_is_nil" do
-    assert_equal nil, @definition.type_cast(nil)
+    expect(@definition.type_cast(nil)).to eq nil
   end
 
   it "test_should_type_cast_to_false_if_value_is_zero" do
-    assert_equal false, @definition.type_cast(0)
+    expect(@definition.type_cast(0)).to eq false
   end
 
   it "test_should_type_cast_to_true_if_value_is_not_zero" do
-    assert_equal true, @definition.type_cast(1)
+    expect(@definition.type_cast(1)).to eq true
   end
 
   it "test_should_type_cast_to_true_if_value_is_true_string" do
-    assert_equal true, @definition.type_cast('true')
+    expect(@definition.type_cast('true')).to eq true
   end
 
   it "test_should_type_cast_to_nil_if_value_is_not_true_string" do
-    assert_nil @definition.type_cast('')
+    expect(@definition.type_cast('')).to eq nil
   end
 
   it "test_should_query_false_if_value_is_nil" do
-    assert_equal false, @definition.query(nil)
+    expect(@definition.query(nil)).to eq false
   end
 
   it "test_should_query_true_if_value_is_one" do
@@ -162,15 +161,15 @@ describe "PreferenceDefinitionWithBooleanTypeTest" do
   end
 
   it "test_should_query_false_if_value_not_one" do
-    assert_equal false, @definition.query(0)
+    expect(@definition.query(0)).to eq false
   end
 
   it "test_should_query_true_if_value_is_true_string" do
-    assert_equal true, @definition.query('true')
+    expect(@definition.query('true')).to eq true
   end
 
   it "test_should_query_false_if_value_is_not_true_string" do
-    assert_equal false, @definition.query('')
+    expect(@definition.query('')).to eq false
   end
 end
 
@@ -181,11 +180,11 @@ describe "PreferenceDefinitionWithNumericTypeTest" do
   end
 
   it "test_should_be_number" do
-    assert @definition.number?
+    expect(@definition.number?).to eq true
   end
 
   it "test_should_type_cast_true_to_integer" do
-    assert_equal 1, @definition.type_cast(true)
+    expect(@definition.type_cast(true)).to eq 1
   end
 
   # it "test_should_type_cast_false_to_integer" do
@@ -193,19 +192,19 @@ describe "PreferenceDefinitionWithNumericTypeTest" do
   # end
 
   it "test_should_type_cast_string_to_integer" do
-    assert_equal 0, @definition.type_cast('hello')
+    expect(@definition.type_cast('hello')).to eq 0
   end
 
   it "test_should_query_false_if_value_is_nil" do
-    assert_equal false, @definition.query(nil)
+    expect(@definition.query(nil)).to eq false
   end
 
   it "test_should_query_true_if_value_is_one" do
-    assert_equal true, @definition.query(1)
+    expect(@definition.query(1)).to eq true
   end
 
   it "test_should_query_false_if_value_is_zero" do
-    assert_equal false, @definition.query(0)
+    expect(@definition.query(0)).to eq false
   end
 end
 
@@ -216,34 +215,34 @@ describe "> PreferenceDefinitionWithStringTypeTest" do
   end
 
   it "test_should_not_be_number" do
-    assert !@definition.number?
+    expect(!@definition.number?).to eq true
   end
 
   it "test_should_type_cast_integers_to_strings" do
-    assert_equal '1', @definition.type_cast('1')
+    expect(@definition.type_cast('1')).to eq '1'
   end
 
   it "test_should_not_type_cast_booleans" do
-    assert_equal 't', @definition.type_cast(true)
+    expect(@definition.type_cast(true)).to eq 't'
   end
 
   it "test_should_query_false_if_value_is_nil" do
-    assert_equal false, @definition.query(nil)
+    expect(@definition.query(nil)).to eq false
   end
 
   it "test_should_query_true_if_value_is_one" do
-    assert_equal true, @definition.query(1)
+    expect(@definition.query(1)).to eq true
   end
 
   it "test_should_query_true_if_value_is_zero" do
-    assert_equal true, @definition.query(0)
+    expect(@definition.query(0)).to eq true
   end
 
   it "test_should_query_false_if_value_is_blank" do
-    assert_equal false, @definition.query('')
+    expect(@definition.query('')).to eq false
   end
 
   it "test_should_query_true_if_value_is_not_blank" do
-    assert_equal true, @definition.query('hello')
+    expect(@definition.query('hello')).to eq true
   end
 end

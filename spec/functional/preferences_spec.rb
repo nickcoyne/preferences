@@ -8,16 +8,16 @@ describe "ModelPreferenceTest" do
   #------------------------------------------------------------------------------
   describe "ModelWithoutPreferencesTest" do
     it "test_should_not_create_preference_definitions" do
-      assert !Car.respond_to?(:preference_definitions)
+      expect(!Car.respond_to?(:preference_definitions)).to eq true
     end
 
     it "test_should_not_create_stored_preferences_association" do
-      assert !Car.new.respond_to?(:stored_preferences)
+      expect(!Car.new.respond_to?(:stored_preferences)).to eq true
     end
 
     it "test_should_not_create_preference_scopes" do
-      assert !Car.respond_to?(:with_preferences)
-      assert !Car.respond_to?(:without_preferences)
+      expect(!Car.respond_to?(:with_preferences)).to eq true
+      expect(!Car.respond_to?(:without_preferences)).to eq true
     end
   end
 
@@ -25,20 +25,20 @@ describe "ModelPreferenceTest" do
   describe "PreferencesAfterFirstBeingDefinedTest" do
     before do
       User.preference :notifications
-      @user = new_user
+      @user = build(:user)
     end
 
     it "test_should_create_preference_definitions" do
-      assert User.respond_to?(:preference_definitions)
+      expect(User.respond_to?(:preference_definitions)).to eq true
     end
 
     it "test_should_create_preference_scopes" do
-      assert User.respond_to?(:with_preferences)
-      assert User.respond_to?(:without_preferences)
+      expect(User.respond_to?(:with_preferences)).to eq true
+      expect(User.respond_to?(:without_preferences)).to eq true
     end
 
     it "test_should_create_stored_preferences_associations" do
-      assert @user.respond_to?(:stored_preferences)
+      expect(@user.respond_to?(:stored_preferences)).to eq true
     end
   end
 
@@ -46,7 +46,7 @@ describe "ModelPreferenceTest" do
   describe "PreferencesAfterBeingDefinedTest" do
     before do
       @definition = User.preference :notifications
-      @user = new_user
+      @user = build(:user)
     end
 
     it "test_should_raise_exception_if_invalid_options_specified" do
@@ -60,75 +60,75 @@ describe "ModelPreferenceTest" do
 
     it "test_should_create_definition" do
       expect(@definition.nil?).to eq false
-      assert_equal 'notifications', @definition.name
+      expect(@definition.name).to eq 'notifications'
     end
 
     it "test_should_create_preferred_query_method" do
-      assert @user.respond_to?(:preferred_notifications?)
+      expect(@user.respond_to?(:preferred_notifications?)).to eq true
     end
 
     it "test_should_create_prefers_query_method" do
-      assert @user.respond_to?(:prefers_notifications?)
+      expect(@user.respond_to?(:prefers_notifications?)).to eq true
     end
 
     it "test_should_create_preferred_reader" do
-      assert @user.respond_to?(:preferred_notifications)
+      expect(@user.respond_to?(:preferred_notifications)).to eq true
     end
 
     it "test_should_create_prefers_reader" do
-      assert @user.respond_to?(:prefers_notifications)
+      expect(@user.respond_to?(:prefers_notifications)).to eq true
     end
 
     it "test_should_create_preferred_writer" do
-      assert @user.respond_to?(:preferred_notifications=)
+      expect(@user.respond_to?(:preferred_notifications=)).to eq true
     end
 
     it "test_should_create_prefers_writer" do
-      assert @user.respond_to?(:prefers_notifications=)
+      expect(@user.respond_to?(:prefers_notifications=)).to eq true
     end
 
     it "test_should_create_preferred_changed_query" do
-      assert @user.respond_to?(:preferred_notifications_changed?)
+      expect(@user.respond_to?(:preferred_notifications_changed?)).to eq true
     end
 
     it "test_should_create_prefers_changed_query" do
-      assert @user.respond_to?(:prefers_notifications_changed?)
+      expect(@user.respond_to?(:prefers_notifications_changed?)).to eq true
     end
 
     it "test_should_create_preferred_was" do
-      assert @user.respond_to?(:preferred_notifications_was)
+      expect(@user.respond_to?(:preferred_notifications_was)).to eq true
     end
 
     it "test_should_create_prefers_was" do
-      assert @user.respond_to?(:prefers_notifications_was)
+      expect(@user.respond_to?(:prefers_notifications_was)).to eq true
     end
 
     it "test_should_create_preferred_change" do
-      assert @user.respond_to?(:preferred_notifications_change)
+      expect(@user.respond_to?(:preferred_notifications_change)).to eq true
     end
 
     it "test_should_create_prefers_change" do
-      assert @user.respond_to?(:prefers_notifications_change)
+      expect(@user.respond_to?(:prefers_notifications_change)).to eq true
     end
 
     it "test_should_create_preferred_will_change" do
-      assert @user.respond_to?(:preferred_notifications_will_change!)
+      expect(@user.respond_to?(:preferred_notifications_will_change!)).to eq true
     end
 
     it "test_should_create_prefers_will_change" do
-      assert @user.respond_to?(:prefers_notifications_will_change!)
+      expect(@user.respond_to?(:prefers_notifications_will_change!)).to eq true
     end
 
     it "test_should_create_preferred_reset" do
-      assert @user.respond_to?(:reset_preferred_notifications!)
+      expect(@user.respond_to?(:reset_preferred_notifications!)).to eq true
     end
 
     it "test_should_create_prefers_reset" do
-      assert @user.respond_to?(:reset_prefers_notifications!)
+      expect(@user.respond_to?(:reset_prefers_notifications!)).to eq true
     end
 
     it "test_should_include_new_definitions_in_preference_definitions" do
-      assert_equal User.preference_definitions['notifications'], @definition
+      expect(@definition).to eq User.preference_definitions['notifications']
     end
   end
 
@@ -136,67 +136,64 @@ describe "ModelPreferenceTest" do
   describe "PreferencesTypeCasted" do
     before do
       @definition = User.preference :rate, :float, :default => 1.0
-      @user = new_user
+      @user = build(:user)
     end
 
     it "test_should_have_float_type" do
-      assert_equal :float, @definition.type
+      expect(@definition.type).to eq :float
     end
 
     it "test_should_only_have_default_preferences" do
-      assert_equal e = {'rate' => 1.0}, @user.preferences
+      expect(@user.preferences).to eq ({'rate' => 1.0})
     end
 
     it "test_should_type_cast_changed_values" do
       @user.write_preference(:rate, "1.1")
-      assert_equal e = {'rate' => 1.1}, @user.preferences
+      expect(@user.preferences).to eq ({'rate' => 1.1})
     end
   end
 
   #------------------------------------------------------------------------------
   describe "PreferencesByDefaultTest" do
     before do
-      include Factory
-
       @definition = User.preference :notifications
-      @user = new_user
+      @user = build(:user)
     end
 
     it "test_should_have_boolean_type" do
-      assert_equal :boolean, @definition.type
+      expect(@definition.type).to eq :boolean
     end
 
     it "test_should_not_have_default_value" do
-      assert_nil @definition.default_value
+      expect(@definition.default_value).to eq nil
     end
 
     it "test_should_only_have_default_preferences" do
-      # assert_equal e = {'notifications' => nil}, @user.preferences
-      assert_equal e = {'notifications' => nil}, @user.preferences
+      expect(@user.preferences).to eq ({'notifications' => nil})
     end
 
     it "test_should_not_query_preferences_changed" do
-      assert_equal false, @user.preferences_changed?
+      expect(@user.preferences_changed?).to eq false
     end
 
     it "test_should_not_query_group_preferences_changed" do
-      assert_equal false, @user.preferences_changed?(:chat)
+      expect(@user.preferences_changed?(:chat)).to eq false
     end
 
     it "test_should_not_have_preferences_changed" do
-      assert_equal [], @user.preferences_changed
+      expect(@user.preferences_changed).to eq []
     end
 
     it "test_should_not_have_group_preferences_changed" do
-      assert_equal [], @user.preferences_changed(:chat)
+      expect(@user.preferences_changed(:chat)).to eq []
     end
 
     it "test_should_not_have_preference_changes" do
-      assert_equal e = {}, @user.preference_changes
+      expect(@user.preference_changes).to eq ({})
     end
 
     it "test_should_not_have_group_preference_changes" do
-      assert_equal e = {}, @user.preference_changes(:chat)
+      expect(@user.preference_changes(:chat)).to eq ({})
     end
   end
 
@@ -204,19 +201,19 @@ describe "ModelPreferenceTest" do
   describe "PreferencesWithCustomTypeTest" do
     before do
       @definition = User.preference :vehicle_id, :integer
-      @user = new_user
+      @user = build(:user)
     end
 
     it "test_should_have_integer_type" do
-      assert_equal :integer, @definition.type
+      expect(@definition.type).to eq :integer
     end
 
     it "test_should_not_have_default_value" do
-      assert_nil @definition.default_value
+      expect(@definition.default_value).to eq nil
     end
 
     it "test_should_only_have_default_preferences" do
-      assert_equal e = {'vehicle_id' => nil}, @user.preferences
+      expect(@user.preferences).to eq ({'vehicle_id' => nil})
     end
   end
 
@@ -224,44 +221,45 @@ describe "ModelPreferenceTest" do
   describe "PreferencesWithCustomDefaultTest" do
     before do
       @definition = User.preference :color, :string, :default => 'red'
-      @user = new_user
+      @user = build(:user)
     end
 
     it "test_should_have_boolean_type" do
-      assert_equal :string, @definition.type
+      expect(@definition.type).to eq :string
     end
 
     it "test_should_have_default_value" do
-      assert_equal 'red', @definition.default_value
+      expect(@definition.default_value).to eq 'red'
     end
 
     it "test_should_only_have_default_preferences" do
-      assert_equal e = {'color' => 'red'}, @user.preferences
+      expect(@user.preferences).to eq ({'color' => 'red'})
     end
   end
 
   #------------------------------------------------------------------------------
   describe "PreferencesWithMultipleDefinitionsTest" do
     before do
+      User.preference_definitions.clear
       User.preference :notifications, :default => true
       User.preference :color, :string, :default => 'red'
-      @user = new_user
+      @user = build(:user)
     end
 
     it "test_should_only_have_default_preferences" do
-      assert_equal e = {'notifications' => true, 'color' => 'red'}, @user.preferences
+      expect(@user.preferences).to eq ({'notifications' => true, 'color' => 'red'})
     end
   end
 
-#------------------------------------------------------------------------------
+  #------------------------------------------------------------------------------
   describe "PreferencesAfterBeingCreatedTest" do
     before do
       User.preference :notifications, :default => true
-      @user = create_user
+      @user = create(:user)
     end
 
     it "test_should_not_have_any_stored_preferences" do
-      assert @user.stored_preferences.empty?
+      expect(@user.stored_preferences.empty?).to eq true
     end
   end
 
@@ -270,7 +268,7 @@ describe "ModelPreferenceTest" do
     before do
       User.preference :notifications, :default => true
       User.preference :rate, :float, :default => 1.0
-      @user = create_user
+      @user = create(:user)
     end
 
     it "test_should_raise_exception_if_invalid_preference_read" do
@@ -280,28 +278,28 @@ describe "ModelPreferenceTest" do
     end
 
     it "test_use_default_value_if_not_stored" do
-      assert_equal true, @user.preferred(:notifications)
+      expect(@user.preferred(:notifications)).to eq true
     end
 
     it "test_should_use_group_default_value_if_not_stored" do
       User.preference :language, :string, :default => 'English', :group_defaults => {:chat => 'Latin'}
-      assert_equal 'English', @user.preferred(:language)
+      expect(@user.preferred(:language)).to eq 'English'
     end
 
     it "test_should_use_stored_value_if_stored" do
-      create_preference(:owner => @user, :name => 'notifications', :value => false)
-      assert_equal false, @user.preferred(:notifications)
+      create(:preference, :owner => @user, :name => 'notifications', :value => false)
+      expect(@user.preferred(:notifications)).to eq false
     end
 
     it "test_should_type_cast_based_on_preference_definition" do
       @user.write_preference(:notifications, 'false')
-      assert_equal false, @user.preferred(:notifications)
+      expect(@user.preferred(:notifications)).to eq false
       @user.write_preference(:rate, "1.2")
-      assert_equal 1.2, @user.preferred(:rate)
+      expect(@user.preferred(:rate)).to eq 1.2
     end
 
     it "test_should_cache_stored_values" do
-      create_preference(:owner => @user, :name => 'notifications', :value => false)
+      create(:preference, :owner => @user, :name => 'notifications', :value => false)
       assert_queries(1) { @user.preferred(:notifications) }
       assert_queries(0) { @user.preferred(:notifications) }
     end
@@ -312,18 +310,18 @@ describe "ModelPreferenceTest" do
     end
 
     it "test_should_use_value_from_preferences_lookup" do
-      create_preference(:owner => @user, :name => 'notifications', :value => false)
+      create(:preference, :owner => @user, :name => 'notifications', :value => false)
       @user.preferences
 
       assert_queries(0) { assert_equal false, @user.preferred(:notifications) }
     end
 
     it "test_should_be_able_to_use_prefers_reader" do
-      assert_equal true, @user.prefers_notifications
+      expect(@user.prefers_notifications).to eq true
     end
 
     it "test_should_be_able_to_use_preferred_reader" do
-      assert_equal true, @user.preferred_notifications
+      expect(@user.preferred_notifications).to eq true
     end
   end
 
@@ -331,25 +329,25 @@ describe "ModelPreferenceTest" do
   describe "PreferencesGroupReaderTest" do
     before do
       User.preference :notifications, :default => true
-      @user = create_user
+      @user = create(:user)
     end
 
     it "test_should_use_default_value_if_not_stored" do
-      assert_equal true, @user.preferred(:notifications, :chat)
+      expect(@user.preferred(:notifications, :chat)).to eq true
     end
 
     it "test_should_use_group_default_value_if_not_stored" do
       User.preference :language, :string, :default => 'English', :group_defaults => {:chat => 'Latin'}
-      assert_equal 'Latin', @user.preferred(:language, :chat)
+      expect(@user.preferred(:language, :chat)).to eq 'Latin'
     end
 
     it "test_should_use_stored_value_if_stored" do
-      create_preference(:owner => @user, :group_type => 'chat', :name => 'notifications', :value => false)
-      assert_equal false, @user.preferred(:notifications, :chat)
+      create(:preference, :owner => @user, :group_type => 'chat', :name => 'notifications', :value => false)
+      expect(@user.preferred(:notifications, :chat)).to eq false
     end
 
     it "test_should_cache_stored_values" do
-      create_preference(:owner => @user, :group_type => 'chat', :name => 'notifications', :value => false)
+      create(:preference, :owner => @user, :group_type => 'chat', :name => 'notifications', :value => false)
       assert_queries(1) { @user.preferred(:notifications, :chat) }
       assert_queries(0) { @user.preferred(:notifications, :chat) }
     end
@@ -360,52 +358,52 @@ describe "ModelPreferenceTest" do
     end
 
     it "test_should_use_value_from_preferences_lookup" do
-      create_preference(:owner => @user, :group_type => 'chat', :name => 'notifications', :value => false)
+      create(:preference, :owner => @user, :group_type => 'chat', :name => 'notifications', :value => false)
       @user.preferences(:chat)
 
       assert_queries(0) { assert_equal false, @user.preferred(:notifications, :chat) }
     end
 
     it "test_should_be_able_to_use_prefers_reader" do
-      assert_equal true, @user.prefers_notifications(:chat)
+      expect(@user.prefers_notifications(:chat)).to eq true
     end
 
     it "test_should_be_able_to_use_preferred_reader" do
-      assert_equal true, @user.preferred_notifications(:chat)
+      expect(@user.preferred_notifications(:chat)).to eq true
     end
   end
 
   #------------------------------------------------------------------------------
   describe "PreferencesARGroupReaderTest" do
     before do
-      @car = create_car
+      @car = create(:car)
 
       User.preference :notifications, :default => true
-      @user = create_user
+      @user = create(:user)
     end
 
     it "test_use_default_value_if_not_stored" do
-      assert_equal true, @user.preferred(:notifications, @car)
+      expect(@user.preferred(:notifications, @car)).to eq true
     end
 
     it "test_should_use_stored_value_if_stored" do
-      create_preference(:owner => @user, :group_type => 'Car', :group_id => @car.id, :name => 'notifications', :value => false)
-      assert_equal false, @user.preferred(:notifications, @car)
+      create(:preference, :owner => @user, :group_type => 'Car', :group_id => @car.id, :name => 'notifications', :value => false)
+      expect(@user.preferred(:notifications, @car)).to eq false
     end
 
     it "test_should_use_value_from_preferences_lookup" do
-      create_preference(:owner => @user, :group_type => 'Car', :group_id => @car.id, :name => 'notifications', :value => false)
+      create(:preference, :owner => @user, :group_type => 'Car', :group_id => @car.id, :name => 'notifications', :value => false)
       @user.preferences(@car)
 
       assert_queries(0) { assert_equal false, @user.preferred(:notifications, @car) }
     end
 
     it "test_should_be_able_to_use_prefers_reader" do
-      assert_equal true, @user.prefers_notifications(@car)
+      expect(@user.prefers_notifications(@car)).to eq true
     end
 
     it "test_should_be_able_to_use_preferred_reader" do
-      assert_equal true, @user.preferred_notifications(@car)
+      expect(@user.preferred_notifications(@car)).to eq true
     end
   end
 
@@ -413,7 +411,7 @@ describe "ModelPreferenceTest" do
   describe "PreferencesQueryTest" do
     before do
       User.preference :language, :string
-      @user = create_user
+      @user = create(:user)
     end
 
     it "test_should_raise_exception_if_invalid_preference_queried" do
@@ -424,30 +422,30 @@ describe "ModelPreferenceTest" do
 
     it "test_should_be_true_if_present" do
       @user.preferred_language = 'English'
-      assert_equal true, @user.preferred?(:language)
+      expect(@user.preferred?(:language)).to eq true
     end
 
     it "test_should_be_false_if_not_present" do
-      assert_equal false, @user.preferred?(:language)
+      expect(@user.preferred?(:language)).to eq false
     end
 
     it "test_should_use_stored_value_if_stored" do
-      create_preference(:owner => @user, :name => 'language', :value => 'English')
-      assert_equal true, @user.preferred?(:language)
+      create(:preference, :owner => @user, :name => 'language', :value => 'English')
+      expect(@user.preferred?(:language)).to eq true
     end
 
     it "test_should_cache_stored_values" do
-      create_preference(:owner => @user, :name => 'language', :value => 'English')
+      create(:preference, :owner => @user, :name => 'language', :value => 'English')
       assert_queries(1) { @user.preferred?(:language) }
       assert_queries(0) { @user.preferred?(:language) }
     end
 
     it "test_should_be_able_to_use_prefers_reader" do
-      assert_equal false, @user.prefers_language?
+      expect(@user.prefers_language?).to eq false
     end
 
     it "test_should_be_able_to_use_preferred_reader" do
-      assert_equal false, @user.preferred_language?
+      expect(@user.preferred_language?).to eq false
     end
   end
 
@@ -455,67 +453,67 @@ describe "ModelPreferenceTest" do
   describe "PreferencesGroupQueryTest" do
     before do
       User.preference :language, :string
-      @user = create_user
+      @user = create(:user)
     end
 
     it "test_should_be_true_if_present" do
       @user.preferred_language = 'English', :chat
-      assert_equal true, @user.preferred?(:language, :chat)
+      expect(@user.preferred?(:language, :chat)).to eq true
     end
 
     it "test_should_be_false_if_not_present" do
-      assert_equal false, @user.preferred?(:language, :chat)
+      expect(@user.preferred?(:language, :chat)).to eq false
     end
 
     it "test_should_use_stored_value_if_stored" do
-      create_preference(:owner => @user, :group_type => 'chat', :name => 'language', :value => 'English')
-      assert_equal true, @user.preferred?(:language, :chat)
+      create(:preference, :owner => @user, :group_type => 'chat', :name => 'language', :value => 'English')
+      expect(@user.preferred?(:language, :chat)).to eq true
     end
 
     it "test_should_cache_stored_values" do
-      create_preference(:owner => @user, :group_type => 'chat', :name => 'language', :value => 'English')
+      create(:preference, :owner => @user, :group_type => 'chat', :name => 'language', :value => 'English')
       assert_queries(1) { @user.preferred?(:language, :chat) }
       assert_queries(0) { @user.preferred?(:language, :chat) }
     end
 
     it "test_should_be_able_to_use_prefers_reader" do
-      assert_equal false, @user.prefers_language?(:chat)
+      expect(@user.prefers_language?(:chat)).to eq false
     end
 
     it "test_should_be_able_to_use_preferred_reader" do
-      assert_equal false, @user.preferred_language?(:chat)
+      expect(@user.preferred_language?(:chat)).to eq false
     end
   end
 
   #------------------------------------------------------------------------------
   describe "PreferencesARGroupQueryTest" do
     before do
-      @car = create_car
+      @car = create(:car)
 
       User.preference :language, :string
-      @user = create_user
+      @user = create(:user)
     end
 
     it "test_should_be_true_if_present" do
       @user.preferred_language = 'English', @car
-      assert_equal true, @user.preferred?(:language, @car)
+      expect(@user.preferred?(:language, @car)).to eq true
     end
 
     it "test_should_be_false_if_not_present" do
-      assert_equal false, @user.preferred?(:language, @car)
+      expect(@user.preferred?(:language, @car)).to eq false
     end
 
     it "test_should_use_stored_value_if_stored" do
-      create_preference(:owner => @user, :group_type => 'Car', :group_id => @car.id, :name => 'language', :value => 'English')
-      assert_equal true, @user.preferred?(:language, @car)
+      create(:preference, :owner => @user, :group_type => 'Car', :group_id => @car.id, :name => 'language', :value => 'English')
+      expect(@user.preferred?(:language, @car)).to eq true
     end
 
     it "test_should_be_able_to_use_prefers_reader" do
-      assert_equal false, @user.prefers_language?(@car)
+      expect(@user.prefers_language?(@car)).to eq false
     end
 
     it "test_should_be_able_to_use_preferred_reader" do
-      assert_equal false, @user.preferred_language?(@car)
+      expect(@user.preferred_language?(@car)).to eq false
     end
   end
 
@@ -524,7 +522,7 @@ describe "ModelPreferenceTest" do
     before do
       User.preference :notifications, :boolean, :default => true
       User.preference :language, :string, :default => 'English'
-      @user = create_user(:login => 'admin')
+      @user = create(:user, :login => 'admin')
     end
 
     it "test_should_raise_exception_if_invalid_preference_written" do
@@ -535,31 +533,31 @@ describe "ModelPreferenceTest" do
 
     it "test_should_have_same_value_if_not_changed" do
       @user.write_preference(:notifications, true)
-      assert_equal true, @user.preferred(:notifications)
+      expect(@user.preferred(:notifications)).to eq true
     end
 
     it "test_should_use_new_value_if_changed" do
       @user.write_preference(:notifications, false)
-      assert_equal false, @user.preferred(:notifications)
+      expect(@user.preferred(:notifications)).to eq false
     end
 
     it "test_should_not_save_record_after_changing_preference" do
       @user.login = 'test'
       @user.write_preference(:notifications, false)
 
-      assert_equal 'admin', User.find(@user.id).login
+      expect(User.find(@user.id).login).to eq 'admin'
     end
 
     it "test_should_not_create_stored_preferences_immediately" do
       @user.write_preference(:notifications, false)
-      assert @user.stored_preferences.empty?
+      expect(@user.stored_preferences.empty?).to eq true
     end
 
     it "test_should_not_create_stored_preference_if_value_not_changed" do
       @user.write_preference(:notifications, true)
       @user.save!
 
-      assert_equal 0, @user.stored_preferences.count
+      expect(@user.stored_preferences.count).to eq 0
     end
 
     it "test_should_not_create_stored_integer_preference_if_typecast_not_changed" do
@@ -568,7 +566,7 @@ describe "ModelPreferenceTest" do
       @user.write_preference(:age, '')
       @user.save!
 
-      assert_equal 0, @user.stored_preferences.count
+      expect(@user.stored_preferences.count).to eq 0
     end
 
     it "test_should_create_stored_integer_preference_if_typecast_changed" do
@@ -577,49 +575,49 @@ describe "ModelPreferenceTest" do
       @user.write_preference(:age, '')
       @user.save!
 
-      assert_nil @user.preferred(:age)
-      assert_equal 1, @user.stored_preferences.count
+      expect(@user.preferred(:age)).to eq nil
+      expect(@user.stored_preferences.count).to eq 1
     end
 
     it "test_should_create_stored_preference_if_value_changed" do
       @user.write_preference(:notifications, false)
       @user.save!
 
-      assert_equal 1, @user.stored_preferences.count
+      expect(@user.stored_preferences.count).to eq 1
     end
 
     it "test_should_overwrite_existing_stored_preference_if_value_changed" do
-      preference = create_preference(:owner => @user, :name => 'notifications', :value => true)
+      preference = create(:preference, :owner => @user, :name => 'notifications', :value => true)
 
       @user.write_preference(:notifications, false)
       @user.save!
 
       preference.reload
-      assert_equal false, preference.value
+      expect(preference.value).to eq false
     end
 
     it "test_should_not_remove_preference_if_set_to_default" do
-      create_preference(:owner => @user, :name => 'notifications', :value => false)
+      create(:preference, :owner => @user, :name => 'notifications', :value => false)
 
       @user.write_preference(:notifications, true)
       @user.save!
       @user.reload
 
-      assert_equal 1, @user.stored_preferences.size
+      expect(@user.stored_preferences.size).to eq 1
       preference = @user.stored_preferences.first
-      assert_equal true, preference.value
+      expect(preference.value).to eq true
     end
 
     it "test_should_not_remove_preference_if_set_to_nil" do
-      create_preference(:owner => @user, :name => 'notifications', :value => false)
+      create(:preference, :owner => @user, :name => 'notifications', :value => false)
 
       @user.write_preference(:notifications, nil)
       @user.save!
       @user.reload
 
-      assert_equal 1, @user.stored_preferences.size
+      expect(@user.stored_preferences.size).to eq 1
       preference = @user.stored_preferences.first
-      assert_nil preference.value
+      expect(preference.value).to eq nil
     end
 
     it "test_should_not_query_for_old_value_if_preferences_loaded" do
@@ -634,31 +632,31 @@ describe "ModelPreferenceTest" do
     before do
       User.preference :notifications, :boolean, :default => true
       User.preference :language, :string, :default => 'English'
-      @user = create_user(:login => 'admin')
+      @user = create(:user, :login => 'admin')
     end
 
     it "test_should_have_same_value_if_not_changed" do
       @user.write_preference(:notifications, true, :chat)
-      assert_equal true, @user.preferred(:notifications, :chat)
+      expect(@user.preferred(:notifications, :chat)).to eq true
     end
 
     it "test_should_use_new_value_if_changed" do
       @user.write_preference(:notifications, false, :chat)
-      assert_equal false, @user.preferred(:notifications, :chat)
+      expect(@user.preferred(:notifications, :chat)).to eq false
     end
 
     it "test_should_not_create_stored_preference_if_value_not_changed" do
       @user.write_preference(:notifications, true, :chat)
       @user.save!
 
-      assert_equal 0, @user.stored_preferences.count
+      expect(@user.stored_preferences.count).to eq 0
     end
 
     it "test_should_create_stored_preference_if_value_changed" do
       @user.write_preference(:notifications, false, :chat)
       @user.save!
 
-      assert_equal 1, @user.stored_preferences.count
+      expect(@user.stored_preferences.count).to eq 1
     end
 
     it "test_should_set_group_attributes_on_stored_preferences" do
@@ -666,53 +664,53 @@ describe "ModelPreferenceTest" do
       @user.save!
 
       preference = @user.stored_preferences.first
-      assert_equal 'chat', preference.group_type
-      assert_nil preference.group_id
+      expect(preference.group_type).to eq 'chat'
+      expect(preference.group_id).to eq nil
     end
 
     it "test_should_overwrite_existing_stored_preference_if_value_changed" do
-      preference = create_preference(:owner => @user, :group_type => 'chat', :name => 'notifications', :value => true)
+      preference = create(:preference, :owner => @user, :group_type => 'chat', :name => 'notifications', :value => true)
 
       @user.write_preference(:notifications, false, :chat)
       @user.save!
 
       preference.reload
-      assert_equal false, preference.value
+      expect(preference.value).to eq false
     end
   end
 
   #------------------------------------------------------------------------------
   describe "PreferencesARGroupWriterTest" do
     before do
-      @car = create_car
+      @car = create(:car)
 
       User.preference :notifications, :boolean, :default => true
       User.preference :language, :string, :default => 'English'
-      @user = create_user(:login => 'admin')
+      @user = create(:user, :login => 'admin')
     end
 
     it "test_should_have_same_value_if_not_changed" do
       @user.write_preference(:notifications, true, @car)
-      assert_equal true, @user.preferred(:notifications, @car)
+      expect(@user.preferred(:notifications, @car)).to eq true
     end
 
     it "test_should_use_new_value_if_changed" do
       @user.write_preference(:notifications, false, @car)
-      assert_equal false, @user.preferred(:notifications, @car)
+      expect(@user.preferred(:notifications, @car)).to eq false
     end
 
     it "test_should_not_create_stored_preference_if_value_not_changed" do
       @user.write_preference(:notifications, true, @car)
       @user.save!
 
-      assert_equal 0, @user.stored_preferences.count
+      expect(@user.stored_preferences.count).to eq 0
     end
 
     it "test_should_create_stored_preference_if_value_changed" do
       @user.write_preference(:notifications, false, @car)
       @user.save!
 
-      assert_equal 1, @user.stored_preferences.count
+      expect(@user.stored_preferences.count).to eq 1
     end
 
     it "test_should_set_group_attributes_on_stored_preferences" do
@@ -720,8 +718,8 @@ describe "ModelPreferenceTest" do
       @user.save!
 
       preference = @user.stored_preferences.first
-      assert_equal 'Car', preference.group_type
-      assert_equal @car.id, preference.group_id
+      expect(preference.group_type).to eq 'Car'
+      expect(preference.group_id).to eq @car.id
     end
   end
 
@@ -730,29 +728,29 @@ describe "ModelPreferenceTest" do
     before do
       User.preference :notifications, :boolean, :default => true
       User.preference :language, :string, :default => 'English'
-      @user = create_user
+      @user = create(:user)
 
       @user.write_preference(:notifications, false)
     end
 
     it "test_should_query_preferences_changed" do
-      assert_equal true, @user.preferences_changed?
+      expect(@user.preferences_changed?).to eq true
     end
 
     it "test_should_query_preference_changed" do
-      assert_equal true, @user.prefers_notifications_changed?
+      expect(@user.prefers_notifications_changed?).to eq true
     end
 
     it "test_should_not_query_preferences_changed_for_group" do
-      assert_equal false, @user.preferences_changed?(:chat)
+      expect(@user.preferences_changed?(:chat)).to eq false
     end
 
     it "test_should_not_query_preference_changed_for_group" do
-      assert_equal false, @user.prefers_notifications_changed?(:chat)
+      expect(@user.prefers_notifications_changed?(:chat)).to eq false
     end
 
     it "test_should_have_preferences_changed" do
-      assert_equal ['notifications'], @user.preferences_changed
+      expect(@user.preferences_changed).to eq ['notifications']
     end
 
     it "test_should_not_build_same_preferences_changed_result" do
@@ -760,16 +758,16 @@ describe "ModelPreferenceTest" do
     end
 
     it "test_should_not_have_preferences_changed_for_group" do
-      assert_equal [], @user.preferences_changed(:chat)
+      expect(@user.preferences_changed(:chat)).to eq []
     end
 
     it "test_should_track_multiple_preferences_changed" do
       @user.write_preference(:language, 'Latin')
-      assert_equal ['language', 'notifications'], @user.preferences_changed.sort
+      expect(@user.preferences_changed.sort).to eq ['language', 'notifications']
     end
 
     it "test_should_have_preference_changes" do
-      assert_equal e = {'notifications' => [true, false]}, @user.preference_changes
+      expect(@user.preference_changes).to eq ({'notifications' => [true, false]})
     end
 
     it "test_should_not_build_same_preference_changes_result" do
@@ -777,28 +775,28 @@ describe "ModelPreferenceTest" do
     end
 
     it "test_should_have_preference_change" do
-      assert_equal [true, false], @user.prefers_notifications_change
+      expect(@user.prefers_notifications_change).to eq [true, false]
     end
 
     it "test_should_have_preference_was" do
-      assert_equal true, @user.prefers_notifications_was
+      expect(@user.prefers_notifications_was).to eq true
     end
 
     it "test_should_not_have_preference_changes_for_group" do
-      assert_equal e = {}, @user.preference_changes(:chat)
+      expect(@user.preference_changes(:chat)).to eq ({})
     end
 
     it "test_should_not_have_preference_change_for_group" do
-      assert_nil @user.prefers_notifications_change(:chat)
+      expect(@user.prefers_notifications_change(:chat)).to eq nil
     end
 
     it "test_should_have_preference_was_for_group" do
-      assert_equal true, @user.prefers_notifications_was(:chat)
+      expect(@user.prefers_notifications_was(:chat)).to eq true
     end
 
     it "test_should_use_latest_value_for_preference_changes" do
       @user.write_preference(:notifications, nil)
-      assert_equal e = {'notifications' => [true, nil]}, @user.preference_changes
+      expect(@user.preference_changes).to eq ({'notifications' => [true, nil]})
     end
 
     it "test_should_use_cloned_old_value_for_preference_changes" do
@@ -806,13 +804,13 @@ describe "ModelPreferenceTest" do
       @user.write_preference(:language, 'Latin')
 
       tracked_old_value = @user.preference_changes['language'][0]
-      assert_equal old_value, tracked_old_value
+      expect(tracked_old_value).to eq old_value
       expect(old_value).to_not be tracked_old_value
     end
 
     it "test_should_track_multiple_preference_changes" do
       @user.write_preference(:language, 'Latin')
-      assert_equal e = {'notifications' => [true, false], 'language' => ['English', 'Latin']}, @user.preference_changes
+      expect(@user.preference_changes).to eq ({'notifications' => [true, false], 'language' => ['English', 'Latin']})
     end
   end
 
@@ -821,57 +819,57 @@ describe "ModelPreferenceTest" do
     before do
       User.preference :notifications, :boolean, :default => true
       User.preference :language, :string, :default => 'English'
-      @user = create_user
+      @user = create(:user)
 
       @user.write_preference(:notifications, false, :chat)
     end
 
     it "test_should_not_query_preferences_changed" do
-      assert_equal false, @user.preferences_changed?
+      expect(@user.preferences_changed?).to eq false
     end
 
     it "test_not_should_query_preference_changed" do
-      assert_equal false, @user.prefers_notifications_changed?
+      expect(@user.prefers_notifications_changed?).to eq false
     end
 
     it "test_should_query_preferences_changed_for_group" do
-      assert_equal true, @user.preferences_changed?(:chat)
+      expect(@user.preferences_changed?(:chat)).to eq true
     end
 
     it "test_should_query_preference_changed_for_group" do
-      assert_equal true, @user.prefers_notifications_changed?(:chat)
+      expect(@user.prefers_notifications_changed?(:chat)).to eq true
     end
 
     it "test_should_have_preferences_changed" do
-      assert_equal [], @user.preferences_changed
+      expect(@user.preferences_changed).to eq []
     end
 
     it "test_should_not_have_preferences_changed_for_group" do
-      assert_equal ['notifications'], @user.preferences_changed(:chat)
+      expect(@user.preferences_changed(:chat)).to eq ['notifications']
     end
 
     it "test_should_have_preference_changes" do
-      assert_equal e = {}, @user.preference_changes
+      expect(@user.preference_changes).to eq ({})
     end
 
     it "test_should_not_have_preference_change" do
-      assert_nil @user.prefers_notifications_change
+      expect(@user.prefers_notifications_change).to eq nil
     end
 
     it "test_should_have_preference_was" do
-      assert_equal true, @user.prefers_notifications_was
+      expect(@user.prefers_notifications_was).to eq true
     end
 
     it "test_should_not_have_preference_changes_for_group" do
-      assert_equal e = {'notifications' => [true, false]}, @user.preference_changes(:chat)
+      expect(@user.preference_changes(:chat)).to eq ({'notifications' => [true, false]})
     end
 
     it "test_should_have_preference_change_for_group" do
-      assert_equal [true, false], @user.prefers_notifications_change(:chat)
+      expect(@user.prefers_notifications_change(:chat)).to eq [true, false]
     end
 
     it "test_should_have_preference_was_for_group" do
-      assert_equal true, @user.prefers_notifications_was(:chat)
+      expect(@user.prefers_notifications_was(:chat)).to eq true
     end
   end
 
@@ -880,21 +878,21 @@ describe "ModelPreferenceTest" do
     before do
       User.preference :notifications, :boolean, :default => true
 
-      @user = create_user
+      @user = create(:user)
       @user.write_preference(:notifications, false)
       @user.write_preference(:notifications, true)
     end
 
     it "test_should_not_query_preferences_changed" do
-      assert_equal false, @user.preferences_changed?
+      expect(@user.preferences_changed?).to eq false
     end
 
     it "test_should_not_have_preferences_changed" do
-      assert_equal [], @user.preferences_changed
+      expect(@user.preferences_changed).to eq []
     end
 
     it "test_should_not_have_preference_changes" do
-      assert_equal e = {}, @user.preference_changes
+      expect(@user.preference_changes).to eq ({})
     end
   end
 
@@ -903,18 +901,18 @@ describe "ModelPreferenceTest" do
     before do
       User.preference :notifications, :boolean, :default => true
 
-      @user = create_user
+      @user = create(:user)
       @user.prefers_notifications_will_change!
       @user.save
     end
 
     it "test_should_store_preference" do
-      assert_equal 1, @user.stored_preferences.count
+      expect(@user.stored_preferences.count).to eq 1
 
       preference = @user.stored_preferences.first
-      assert_equal nil, preference.group_type
-      assert_equal nil, preference.group_id
-      assert_equal true, preference.value
+      expect(preference.group_type).to eq nil
+      expect(preference.group_id).to eq nil
+      expect(preference.value).to eq true
     end
   end
 
@@ -924,18 +922,18 @@ describe "ModelPreferenceTest" do
       User.preference :notifications, :boolean, :default => true
       User.preference :language, :string, :default => 'English'
 
-      @user = create_user
+      @user = create(:user)
       @user.prefers_notifications_will_change!(:chat)
       @user.save
     end
 
     it "test_should_store_preference" do
-      assert_equal 1, @user.stored_preferences.count
+      expect(@user.stored_preferences.count).to eq 1
 
       preference = @user.stored_preferences.first
-      assert_equal 'chat', preference.group_type
-      assert_equal nil, preference.group_id
-      assert_equal true, preference.value
+      expect(preference.group_type).to eq 'chat'
+      expect(preference.group_id).to eq nil
+      expect(preference.value).to eq true
     end
 
     it "test_should_use_cloned_value_for_tracking_old_value" do
@@ -943,7 +941,7 @@ describe "ModelPreferenceTest" do
       @user.preferred_language_will_change!
 
       tracked_old_value = @user.preferred_language_was
-      assert_equal old_value, tracked_old_value
+      expect(tracked_old_value).to eq old_value
       expect(old_value).to_not be tracked_old_value
     end
   end
@@ -953,18 +951,18 @@ describe "ModelPreferenceTest" do
     before do
       User.preference :notifications, :boolean, :default => true
 
-      @user = create_user
+      @user = create(:user)
       @user.write_preference(:notifications, false)
       @user.write_preference(:notifications, false, :chat)
       @user.reset_prefers_notifications!
     end
 
     it "test_should_revert_to_original_value" do
-      assert_equal true, @user.preferred(:notifications)
+      expect(@user.preferred(:notifications)).to eq true
     end
 
     it "test_should_not_reset_groups" do
-      assert_equal false, @user.preferred(:notifications, :chat)
+      expect(@user.preferred(:notifications, :chat)).to eq false
     end
   end
 
@@ -973,59 +971,60 @@ describe "ModelPreferenceTest" do
     before do
       User.preference :notifications, :boolean, :default => true
 
-      @user = create_user
+      @user = create(:user)
       @user.write_preference(:notifications, false)
       @user.write_preference(:notifications, false, :chat)
       @user.reset_prefers_notifications!(:chat)
     end
 
     it "test_should_revert_to_original_value" do
-      assert_equal true, @user.preferred(:notifications, :chat)
+      expect(@user.preferred(:notifications, :chat)).to eq true
     end
 
     it "test_should_not_reset_default_group" do
-      assert_equal false, @user.preferred(:notifications)
+      expect(@user.preferred(:notifications)).to eq false
     end
   end
 
   #------------------------------------------------------------------------------
   describe "PreferencesLookupTest" do
     before do
+      User.preference_definitions.clear
       User.preference :notifications, :boolean, :default => true
       User.preference :language, :string, :default => 'English', :group_defaults => {:chat => 'Latin'}
 
-      @user = create_user
+      @user = create(:user)
     end
 
     it "test_should_only_have_defaults_if_nothing_customized" do
-      assert_equal e = {'notifications' => true, 'language' => 'English'}, @user.preferences
+      expect(@user.preferences).to eq ({'notifications' => true, 'language' => 'English'})
     end
 
     it "test_should_merge_defaults_with_unsaved_changes" do
       @user.write_preference(:notifications, false)
-      assert_equal e = {'notifications' => false, 'language' => 'English'}, @user.preferences
+      expect(@user.preferences).to eq ({'notifications' => false, 'language' => 'English'})
     end
 
     it "test_should_merge_defaults_with_saved_changes" do
-      create_preference(:owner => @user, :name => 'notifications', :value => false)
-      assert_equal e = {'notifications' => false, 'language' => 'English'}, @user.preferences
+      create(:preference, :owner => @user, :name => 'notifications', :value => false)
+      expect(@user.preferences).to eq ({'notifications' => false, 'language' => 'English'})
     end
 
     it "test_should_merge_stored_preferences_with_unsaved_changes" do
-      create_preference(:owner => @user, :name => 'notifications', :value => false)
+      create(:preference, :owner => @user, :name => 'notifications', :value => false)
       @user.write_preference(:language, 'Latin')
-      assert_equal e = {'notifications' => false, 'language' => 'Latin'}, @user.preferences
+      expect(@user.preferences).to eq ({'notifications' => false, 'language' => 'Latin'})
     end
 
     it "test_should_use_unsaved_changes_over_stored_preferences" do
-      create_preference(:owner => @user, :name => 'notifications', :value => true)
+      create(:preference, :owner => @user, :name => 'notifications', :value => true)
       @user.write_preference(:notifications, false)
-      assert_equal e = {'notifications' => false, 'language' => 'English'}, @user.preferences
+      expect(@user.preferences).to eq ({'notifications' => false, 'language' => 'English'})
     end
 
     it "test_should_typecast_unsaved_changes" do
       @user.write_preference(:notifications, 'true')
-      assert_equal e = {'notifications' => true, 'language' => 'English'}, @user.preferences
+      expect(@user.preferences).to eq ({'notifications' => true, 'language' => 'English'})
     end
 
     it "test_should_cache_results" do
@@ -1034,10 +1033,10 @@ describe "ModelPreferenceTest" do
     end
 
     it "test_should_not_query_if_stored_preferences_eager_loaded" do
-      create_preference(:owner => @user, :name => 'notifications', :value => false)
+      create(:preference, :owner => @user, :name => 'notifications', :value => false)
       user = User.includes(:stored_preferences).where(id: @user.id).first
       assert_queries(0) do
-        assert_equal e = {'notifications' => false, 'language' => 'English'}, user.preferences
+        expect(user.preferences).to eq ({'notifications' => false, 'language' => 'English'})
       end
     end
 
@@ -1046,42 +1045,43 @@ describe "ModelPreferenceTest" do
     end
 
     it "test_should_use_preferences_for_prefs" do
-      assert_equal @user.preferences, @user.prefs
+      expect(@user.prefs).to eq @user.preferences
     end
   end
 
   #------------------------------------------------------------------------------
   describe "PreferencesGroupLookupTest" do
     before do
+      User.preference_definitions.clear
       User.preference :notifications, :boolean, :default => true
       User.preference :language, :string, :default => 'English', :group_defaults => {:chat => 'Latin'}
 
-      @user = create_user
+      @user = create(:user)
     end
 
     it "test_should_only_have_defaults_if_nothing_customized" do
-      assert_equal e = {'notifications' => true, 'language' => 'Latin'}, @user.preferences(:chat)
+      expect(@user.preferences(:chat)).to eq ({'notifications' => true, 'language' => 'Latin'})
     end
 
     it "test_should_merge_defaults_with_unsaved_changes" do
       @user.write_preference(:notifications, false, :chat)
-      assert_equal e = {'notifications' => false, 'language' => 'Latin'}, @user.preferences(:chat)
+      expect(@user.preferences(:chat)).to eq ({'notifications' => false, 'language' => 'Latin'})
     end
 
     it "test_should_merge_defaults_with_saved_changes" do
-      create_preference(:owner => @user, :group_type => 'chat', :name => 'notifications', :value => false)
-      assert_equal e = {'notifications' => false, 'language' => 'Latin'}, @user.preferences(:chat)
+      create(:preference, :owner => @user, :group_type => 'chat', :name => 'notifications', :value => false)
+      expect(@user.preferences(:chat)).to eq ({'notifications' => false, 'language' => 'Latin'})
     end
 
     it "test_should_merge_stored_preferences_with_unsaved_changes" do
-      create_preference(:owner => @user, :group_type => 'chat', :name => 'notifications', :value => false)
+      create(:preference, :owner => @user, :group_type => 'chat', :name => 'notifications', :value => false)
       @user.write_preference(:language, 'Spanish', :chat)
-      assert_equal e = {'notifications' => false, 'language' => 'Spanish'}, @user.preferences(:chat)
+      expect(@user.preferences(:chat)).to eq ({'notifications' => false, 'language' => 'Spanish'})
     end
 
     it "test_should_typecast_unsaved_changes" do
       @user.write_preference(:notifications, 'true', :chat)
-      assert_equal e = {'notifications' => true, 'language' => 'English'}, @user.preferences
+      expect(@user.preferences).to eq ({'notifications' => true, 'language' => 'English'})
     end
 
     it "test_should_cache_results" do
@@ -1104,79 +1104,82 @@ describe "ModelPreferenceTest" do
   #------------------------------------------------------------------------------
   describe "PreferencesARGroupLookupTest" do
     before do
-      @car = create_car
+      @car = create(:car)
 
+      User.preference_definitions.clear
       User.preference :notifications, :boolean, :default => true
       User.preference :language, :string, :default => 'English'
 
-      @user = create_user
+      @user = create(:user)
     end
 
     it "test_should_only_have_defaults_if_nothing_customized" do
-      assert_equal e = {'notifications' => true, 'language' => 'English'}, @user.preferences(@car)
+      expect(@user.preferences(@car)).to eq ({'notifications' => true, 'language' => 'English'})
     end
 
     it "test_should_merge_defaults_with_unsaved_changes" do
       @user.write_preference(:notifications, false, @car)
-      assert_equal e = {'notifications' => false, 'language' => 'English'}, @user.preferences(@car)
+      expect(@user.preferences(@car)).to eq ({'notifications' => false, 'language' => 'English'})
     end
 
     it "test_should_merge_defaults_with_saved_changes" do
-      create_preference(:owner => @user, :group_type => 'Car', :group_id => @car.id, :name => 'notifications', :value => false)
-      assert_equal e = {'notifications' => false, 'language' => 'English'}, @user.preferences(@car)
+      create(:preference, :owner => @user, :group_type => 'Car', :group_id => @car.id, :name => 'notifications', :value => false)
+      expect(@user.preferences(@car)).to eq ({'notifications' => false, 'language' => 'English'})
     end
 
     it "test_should_merge_stored_preferences_with_unsaved_changes" do
-      create_preference(:owner => @user, :group_type => 'Car', :group_id => @car.id, :name => 'notifications', :value => false)
+      create(:preference, :owner => @user, :group_type => 'Car', :group_id => @car.id, :name => 'notifications', :value => false)
       @user.write_preference(:language, 'Latin', @car)
-      assert_equal e = {'notifications' => false, 'language' => 'Latin'}, @user.preferences(@car)
+      expect(@user.preferences(@car)).to eq ({'notifications' => false, 'language' => 'Latin'})
     end
   end
 
   #------------------------------------------------------------------------------
   describe "PreferencesNilGroupLookupTest" do
     before do
-      @car = create_car
+      @car = create(:car)
 
+      User.preference_definitions.clear
       User.preference :notifications, :boolean, :default => true
       User.preference :language, :string, :default => 'English'
 
-      @user = create_user
+      @user = create(:user)
     end
 
     it "test_should_only_have_defaults_if_nothing_customized" do
-      assert_equal e = {'notifications' => true, 'language' => 'English'}, @user.preferences(nil)
+      expect(@user.preferences(nil)).to eq ({'notifications' => true, 'language' => 'English'})
     end
 
     it "test_should_merge_defaults_with_unsaved_changes" do
       @user.write_preference(:notifications, false)
-      assert_equal e = {'notifications' => false, 'language' => 'English'}, @user.preferences(nil)
+      expect(@user.preferences(nil)).to eq ({'notifications' => false, 'language' => 'English'})
     end
 
     it "test_should_merge_defaults_with_saved_changes" do
-      create_preference(:owner => @user, :name => 'notifications', :value => false)
-      assert_equal e = {'notifications' => false, 'language' => 'English'}, @user.preferences(nil)
+      create(:preference, :owner => @user, :name => 'notifications', :value => false)
+      expect(@user.preferences(nil)).to eq ({'notifications' => false, 'language' => 'English'})
     end
 
     it "test_should_merge_stored_preferences_with_unsaved_changes" do
-      create_preference(:owner => @user, :name => 'notifications', :value => false)
+      create(:preference, :owner => @user, :name => 'notifications', :value => false)
       @user.write_preference(:language, 'Latin')
-      assert_equal e = {'notifications' => false, 'language' => 'Latin'}, @user.preferences(nil)
+      expect(@user.preferences(nil)).to eq ({'notifications' => false, 'language' => 'Latin'})
     end
   end
 
   #------------------------------------------------------------------------------
   describe "PreferencesLookupWithGroupsTest" do
     before do
+      User.preference_definitions.clear
       User.preference :notifications, :boolean, :default => true
       User.preference :language, :string, :default => 'English'
 
-      @user = create_user
-      create_preference(:owner => @user, :group_type => 'chat', :name => 'notifications', :value => false)
+      @user = create(:user)
+      create(:preference, :owner => @user, :group_type => 'chat', :name => 'notifications', :value => false)
     end
 
     it "test_not_include_group_preferences_by_default" do
-      assert_equal e = {'notifications' => true, 'language' => 'English'}, @user.preferences
+      expect(@user.preferences).to eq ({'notifications' => true, 'language' => 'English'})
     end
   end
 
@@ -1185,22 +1188,22 @@ describe "ModelPreferenceTest" do
     before do
       User.preference :notifications, :boolean, :default => true
 
-      @user = create_user
+      @user = create(:user)
       @user.write_preference(:notifications, false)
       @user.reload
     end
 
     it "test_should_reset_unsaved_preferences" do
-      assert_equal true, @user.preferred(:notifications)
+      expect(@user.preferred(:notifications)).to eq true
     end
 
     it "test_should_not_save_reset_preferences" do
       @user.save!
-      assert @user.stored_preferences.empty?
+      expect(@user.stored_preferences.empty?).to eq true
     end
 
     it "test_should_reset_preferences" do
-      assert_equal e = {'notifications' => true}, @user.preferences
+      expect(@user.preferences).to eq ({'notifications' => true})
     end
 
     it "test_should_clear_query_cache_for_preferences" do
@@ -1208,15 +1211,15 @@ describe "ModelPreferenceTest" do
     end
 
     it "test_should_reset_preferences_changed_query" do
-      assert_equal false, @user.preferences_changed?
+      expect(@user.preferences_changed?).to eq false
     end
 
     it "test_should_reset_preferences_changed" do
-      assert_equal [], @user.preferences_changed
+      expect(@user.preferences_changed).to eq []
     end
 
     it "test_should_reset_preference_changes" do
-      assert_equal e = {}, @user.preference_changes
+      expect(@user.preference_changes).to eq ({})
     end
   end
 
@@ -1225,17 +1228,17 @@ describe "ModelPreferenceTest" do
     before do
       User.preference :notifications, :boolean, :default => true
 
-      @user = create_user
+      @user = create(:user)
       @user.write_preference(:notifications, false, :chat)
       @user.reload
     end
 
     it "test_should_reset_unsaved_preferences" do
-      assert_equal true, @user.preferred(:notifications, :chat)
+      expect(@user.preferred(:notifications, :chat)).to eq true
     end
 
     it "test_should_reset_preferences" do
-      assert_equal e = {'notifications' => true}, @user.preferences(:chat)
+      expect(@user.preferences(:chat)).to eq ({'notifications' => true})
     end
 
     it "test_should_clear_query_cache_for_preferences" do
@@ -1243,15 +1246,15 @@ describe "ModelPreferenceTest" do
     end
 
     it "test_should_reset_preferences_changed_query" do
-      assert_equal false, @user.preferences_changed?(:chat)
+      expect(@user.preferences_changed?(:chat)).to eq false
     end
 
     it "test_should_reset_preferences_changed" do
-      assert_equal [], @user.preferences_changed(:chat)
+      expect(@user.preferences_changed(:chat)).to eq []
     end
 
     it "test_should_reset_preference_changes" do
-      assert_equal e = {}, @user.preference_changes(:chat)
+      expect(@user.preference_changes(:chat)).to eq ({})
     end
   end
 
@@ -1262,8 +1265,8 @@ describe "ModelPreferenceTest" do
       User.preference :language, :string, :default => 'English'
       User.preference :color, :string, :default => 'red'
 
-      @user = create_user
-      @customized_user = create_user(:login => 'customized',
+      @user = create(:user)
+      @customized_user = create(:user,:login => 'customized',
         :prefers_notifications => false,
         :preferred_language => 'Latin'
       )
@@ -1273,35 +1276,35 @@ describe "ModelPreferenceTest" do
     end
 
     it "test_should_not_find_if_no_preference_matched" do
-      assert_equal [], User.with_preferences(:language => 'Italian')
+      expect(User.with_preferences(:language => 'Italian')).to eq []
     end
 
     it "test_should_find_with_null_preference" do
-      assert_equal [@user], User.with_preferences(:notifications => nil)
+      expect(User.with_preferences(:notifications => nil)).to eq [@user]
     end
 
     it "test_should_find_with_default_preference" do
-      assert_equal [@user], User.with_preferences(:language => 'English')
+      expect(User.with_preferences(:language => 'English')).to eq [@user]
     end
 
     it "test_should_find_with_multiple_default_preferences" do
-      assert_equal [@user], User.with_preferences(:notifications => nil, :language => 'English')
+      expect(User.with_preferences(:notifications => nil, :language => 'English')).to eq [@user]
     end
 
     it "test_should_find_with_custom_preference" do
-      assert_equal [@customized_user], User.with_preferences(:language => 'Latin')
+      expect(User.with_preferences(:language => 'Latin')).to eq [@customized_user]
     end
 
     it "test_should_find_with_multiple_custom_preferences" do
-      assert_equal [@customized_user], User.with_preferences(:notifications => false, :language => 'Latin')
+      expect(User.with_preferences(:notifications => false, :language => 'Latin')).to eq [@customized_user]
     end
 
     it "test_should_find_with_mixed_default_and_custom_preferences" do
-      assert_equal [@customized_user], User.with_preferences(:color => 'red', :language => 'Latin')
+      expect(User.with_preferences(:color => 'red', :language => 'Latin')).to eq [@customized_user]
     end
 
     it "test_should_find_with_default_group_preference" do
-      assert_equal [@user], User.with_preferences(:chat => {:language => 'English'})
+      expect(User.with_preferences(:chat => {:language => 'English'})).to eq [@user]
     end
 
     it "test_should_find_with_customized_default_group_preference" do
@@ -1309,34 +1312,34 @@ describe "ModelPreferenceTest" do
       @customized_user.preferred_country = 'US', :chat
       @customized_user.save!
 
-      assert_equal [@user], User.with_preferences(:chat => {:country => 'UK'})
+      expect(User.with_preferences(:chat => {:country => 'UK'})).to eq [@user]
     end
 
     it "test_should_find_with_multiple_default_group_preferences" do
-      assert_equal [@user], User.with_preferences(:chat => {:notifications => nil, :language => 'English'})
+      expect(User.with_preferences(:chat => {:notifications => nil, :language => 'English'})).to eq [@user]
     end
 
     it "test_should_find_with_custom_group_preference" do
-      assert_equal [@customized_user], User.with_preferences(:chat => {:language => 'Latin'})
+      expect(User.with_preferences(:chat => {:language => 'Latin'})).to eq [@customized_user]
     end
 
     it "test_should_find_with_multiple_custom_group_preferences" do
-      assert_equal [@customized_user], User.with_preferences(:chat => {:notifications => false, :language => 'Latin'})
+      expect(User.with_preferences(:chat => {:notifications => false, :language => 'Latin'})).to eq [@customized_user]
     end
 
     it "test_should_find_with_mixed_default_and_custom_group_preferences" do
-      assert_equal [@customized_user], User.with_preferences(:chat => {:color => 'red', :language => 'Latin'})
+      expect(User.with_preferences(:chat => {:color => 'red', :language => 'Latin'})).to eq [@customized_user]
     end
 
     it "test_should_find_with_mixed_basic_and_group_preferences" do
       @customized_user.preferred_language = 'English'
       @customized_user.save!
 
-      assert_equal [@customized_user], User.with_preferences(:language => 'English', :chat => {:language => 'Latin'})
+      expect(User.with_preferences(:language => 'English', :chat => {:language => 'Latin'})).to eq [@customized_user]
     end
 
     it "test_should_allow_chaining" do
-      assert_equal [@user], User.with_preferences(:language => 'English').with_preferences(:color => 'red')
+      expect(User.with_preferences(:language => 'English').with_preferences(:color => 'red')).to eq [@user]
     end
   end
 
@@ -1347,8 +1350,8 @@ describe "ModelPreferenceTest" do
       User.preference :language, :string, :default => 'English'
       User.preference :color, :string, :default => 'red'
 
-      @user = create_user
-      @customized_user = create_user(:login => 'customized',
+      @user = create(:user)
+      @customized_user = create(:user, :login => 'customized',
         :prefers_notifications => false,
         :preferred_language => 'Latin'
       )
@@ -1358,35 +1361,35 @@ describe "ModelPreferenceTest" do
     end
 
     it "test_should_not_find_if_no_preference_matched" do
-      assert_equal [], User.without_preferences(:color => 'red')
+      expect(User.without_preferences(:color => 'red')).to eq []
     end
 
     it "test_should_find_with_null_preference" do
-      assert_equal [@user], User.without_preferences(:notifications => false)
+      expect(User.without_preferences(:notifications => false)).to eq [@user]
     end
 
     it "test_should_find_with_default_preference" do
-      assert_equal [@user], User.without_preferences(:language => 'Latin')
+      expect(User.without_preferences(:language => 'Latin')).to eq [@user]
     end
 
     it "test_should_find_with_multiple_default_preferences" do
-      assert_equal [@user], User.without_preferences(:language => 'Latin', :notifications => false)
+      expect(User.without_preferences(:language => 'Latin', :notifications => false)).to eq [@user]
     end
 
     it "test_should_find_with_custom_preference" do
-      assert_equal [@customized_user], User.without_preferences(:language => 'English')
+      expect(User.without_preferences(:language => 'English')).to eq [@customized_user]
     end
 
     it "test_should_find_with_multiple_custom_preferences" do
-      assert_equal [@customized_user], User.without_preferences(:language => 'English', :notifications => nil)
+      expect(User.without_preferences(:language => 'English', :notifications => nil)).to eq [@customized_user]
     end
 
     it "test_should_find_with_mixed_default_and_custom_preferences" do
-      assert_equal [@customized_user], User.without_preferences(:language => 'English', :color => 'blue')
+      expect(User.without_preferences(:language => 'English', :color => 'blue')).to eq [@customized_user]
     end
 
     it "test_should_find_with_default_group_preference" do
-      assert_equal [@user], User.without_preferences(:chat => {:language => 'Latin'})
+      expect(User.without_preferences(:chat => {:language => 'Latin'})).to eq [@user]
     end
 
     it "test_should_find_with_customized_default_group_preference" do
@@ -1394,34 +1397,34 @@ describe "ModelPreferenceTest" do
       @customized_user.preferred_country = 'US', :chat
       @customized_user.save!
 
-      assert_equal [@user], User.without_preferences(:chat => {:country => 'US'})
+      expect(User.without_preferences(:chat => {:country => 'US'})).to eq [@user]
     end
 
     it "test_should_find_with_multiple_default_group_preferences" do
-      assert_equal [@user], User.without_preferences(:chat => {:language => 'Latin', :notifications => false})
+      expect(User.without_preferences(:chat => {:language => 'Latin', :notifications => false})).to eq [@user]
     end
 
     it "test_should_find_with_custom_group_preference" do
-      assert_equal [@customized_user], User.without_preferences(:chat => {:language => 'English'})
+      expect(User.without_preferences(:chat => {:language => 'English'})).to eq [@customized_user]
     end
 
     it "test_should_find_with_multiple_custom_group_preferences" do
-      assert_equal [@customized_user], User.without_preferences(:chat => {:language => 'English', :notifications => nil})
+      expect(User.without_preferences(:chat => {:language => 'English', :notifications => nil})).to eq [@customized_user]
     end
 
     it "test_should_find_with_mixed_default_and_custom_group_preferences" do
-      assert_equal [@customized_user], User.without_preferences(:chat => {:language => 'English', :color => 'blue'})
+      expect(User.without_preferences(:chat => {:language => 'English', :color => 'blue'})).to eq [@customized_user]
     end
 
     it "test_should_find_with_mixed_basic_and_group_preferences" do
       @customized_user.preferred_language = 'English'
       @customized_user.save!
 
-      assert_equal [@customized_user], User.without_preferences(:language => 'Latin', :chat => {:language => 'English'})
+      expect(User.without_preferences(:language => 'Latin', :chat => {:language => 'English'})).to eq [@customized_user]
     end
 
     it "test_should_allow_chaining" do
-      assert_equal [@user], User.without_preferences(:language => 'Latin').without_preferences(:color => 'blue')
+      expect(User.without_preferences(:language => 'Latin').without_preferences(:color => 'blue')).to eq [@user]
     end
   end
 end
