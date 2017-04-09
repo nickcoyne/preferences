@@ -3,13 +3,13 @@ module Preferences
   class PreferenceDefinition
     # The data type for the content stored in this preference type
     attr_reader :type
-    
+
     def initialize(name, *args) #:nodoc:
       options = args.extract_options!
       options.assert_valid_keys(:default, :group_defaults)
       
       @type = args.first ? args.first.to_sym : :boolean
-      
+
       case @type
       when :any
         @klass = "ActiveRecord::Type::Value".constantize.new
@@ -27,32 +27,38 @@ module Preferences
         defaults
       end
     end
-    
+
     # The name of the preference
     def name
       @column.name
     end
-    
+
     # The default value to use for the preference in case none have been
     # previously defined
     def default_value(group = nil)
       @group_defaults.include?(group) ? @group_defaults[group] : type_cast(@column.default)
     end
-    
+
     # Determines whether column backing this preference stores numberic values
     def number?
-      @column.number?
+      @column.type == :integer || @column.type == :float
     end
-    
+
     # Typecasts the value based on the type of preference that was defined.
     # This uses ActiveRecord's typecast functionality so the same rules for
     # typecasting a model's columns apply here.
     def type_cast(value)
-      return 1 if @type == :integer && value == true
-      return 0 if @type == :integer && value == false
-      @type == :any ? value : @column.type_cast_from_database(value)
+      return 1      if @type == :integer && value == true
+      return 0      if @type == :integer && value == false
+      return true   if @type == :boolean && (value == 't' || value == true)
+      return false  if @type == :boolean && (value == 'f' || value == false)
+      if @type == :any
+        value
+      else
+        @klass.respond_to?(:deserialize) ? @klass.deserialize(value) : @column.type_cast_from_database(value)
+      end
     end
-    
+
     # Typecasts the value to true/false depending on the type of preference
     def query(value)
       if !(value = type_cast(value))

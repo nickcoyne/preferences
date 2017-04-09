@@ -230,7 +230,7 @@ module Preferences
     # Generates the scope for looking under records with a specific set of
     # preferences associated with them.
     #
-    # Note thate this is a bit more complicated than usual since the preference
+    # Note that this is a bit more complicated than usual since the preference
     # definitions aren't in the database for joins, defaults need to be accounted
     # for, and querying for the the presence of multiple preferences requires
     # multiple joins.
@@ -260,7 +260,7 @@ module Preferences
 
         # Since each preference is a different record, they need their own
         # join so that the proper conditions can be set
-        joins << "LEFT JOIN preferences AS #{table} ON #{table}.owner_id = #{table_name}.#{primary_key} AND " + 
+        joins << "LEFT JOIN preferences AS #{table} ON #{table}.owner_id = #{table_name}.#{primary_key} AND " +
           sanitize_sql_hash_for_conditions(
             "#{table}.owner_type" => base_class.name.to_s,
             "#{table}.group_id" => group_id,
@@ -280,17 +280,15 @@ module Preferences
       joins(joins).where(values.unshift(sql))
     end
 
-    # this function is deprecated in 4.2 and to be removed in 5.0.
-    # but it's useful, particularly how it can handle conditions that are nil.
-    # so keep it for now.
-    def sanitize_sql_hash_for_conditions(attrs, default_table_name = self.table_name)
-      attrs = ActiveRecord::PredicateBuilder.resolve_column_aliases self, attrs
-      attrs = expand_hash_conditions_for_aggregates(attrs)
-
-      table = Arel::Table.new(table_name, arel_engine).alias(default_table_name)
-      ActiveRecord::PredicateBuilder.build_from_hash(self, attrs, table).map { |b|
-        connection.visitor.compile b
-      }.join(' AND ')
+    # The Rails version of this function was removed in 5.0. So use this instead.
+    # It properly handles the 'IS NULL' case
+    def sanitize_sql_hash_for_conditions(attrs)
+      return '' unless attrs.is_a? Hash
+      conditions = []
+      attrs.each do |key, value|
+        conditions << (value ? sanitize_sql_for_conditions(["#{key} = ?", value]) : "#{key} IS NULL")
+      end
+      conditions.join(' AND ')
     end
 
   end

@@ -5,7 +5,7 @@
 
 **Preferences** adds support for easily creating custom preferences for models.
 
-This gem is a fork of the original [preferences gem by Aaron Pfeifer](https://github.com/pluginaweek/preferences).  It supports Rails 4.2, and all tests are working.  The gem has been renamed to [dm_preferences](https://rubygems.org/gems/dm_preferences) so as not to conflict with the original.
+This gem is a fork of the original [preferences gem by Aaron Pfeifer](https://github.com/pluginaweek/preferences).  It supports Rails 5 and 4.2, and all tests are working.  The gem has been renamed to [dm_preferences](https://rubygems.org/gems/dm_preferences) so as not to conflict with the original.
 
 ## Description
 
@@ -32,7 +32,7 @@ a separate table and making it dead-simple to define and manage preferences.
 
 Add the following to your gem file:
 
-    gem 'dm_preferences', '~> 1.0'
+    gem 'dm_preferences', '~> 1.5'
 
 _preferences_ requires an additional database table to work.  You can generate
 a migration for this table like so:
@@ -268,5 +268,6 @@ Mailing List
 
 ## Dependencies
 
+* 1.5.x for Rails 5
 * 1.0.x for Rails 4.2
 * 0.5.6 for Rails 4.1

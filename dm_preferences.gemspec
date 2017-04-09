@@ -17,7 +17,5 @@ Gem::Specification.new do |s|
   s.rdoc_options      = %w(--line-numbers --inline-source --title preferences --main README.rdoc)
   s.extra_rdoc_files  = %w(README.md CHANGELOG.md LICENSE)
   
-  s.add_development_dependency "rails", "~> 4.2"
-  s.add_development_dependency "sqlite3", '~> 1.3'
-  s.add_development_dependency 'rspec-rails', '~> 3.0'
+  s.add_dependency "rails", ">= 4.2"
  end
