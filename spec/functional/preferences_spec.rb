@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe "ModelPreferenceTest" do
-  after do
+  after :each do
     User.preference_definitions.clear
   end
 
