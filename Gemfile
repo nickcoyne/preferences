@@ -1,5 +1,5 @@
 source "http://www.rubygems.org"
- 
+
 rails_version = ENV["RAILS_VERSION"] || "default"
 
 rails = case rails_version
@@ -19,7 +19,7 @@ group :development, :test do
   gem 'sqlite3'
   gem 'byebug'
 
-  gem 'mocha', '~> 1.1.0', :require => false
-  gem 'rspec-rails', '~> 3.5.0'
-  gem 'factory_girl_rails', '~> 4.4.1'
+  gem 'mocha', '~> 1.3.0', :require => false
+  gem 'rspec-rails', '~> 3.7.2'
+  gem 'factory_bot_rails', '~> 4.8.2'
 end

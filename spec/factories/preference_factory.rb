@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :preference do
     name          'notifications'
     value         false
